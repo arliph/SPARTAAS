@@ -1,8 +1,0 @@
-^.*\.Rproj$
-^\.Rproj\.user$
-.csv
-LICENSE
-CreateNetwork.R
-^doc$
-^Meta$
-script.R
