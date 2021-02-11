@@ -2,7 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
-.Rproj
+.Rbuildignore
+.gitignore
+SPARTAAS.Rproj
 *.csv
 doc
 Meta
