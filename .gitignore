@@ -1,7 +1,8 @@
-.Rproj
+.Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+.Rproj
 *.csv
 doc
 Meta
