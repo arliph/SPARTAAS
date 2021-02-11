@@ -1,7 +1,6 @@
 # SPARTAAS
 Statistical pattern recognition and dating using archaeological artefacts assemblages
 
-[![R build status](https://github.com/kbroman/broman/workflows/R-CMD-check/badge.svg)](https://github.com/kbroman/broman/actions)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SPARTAAS)](https://cran.r-project.org/package=SPARTAAS)
 ---
 
