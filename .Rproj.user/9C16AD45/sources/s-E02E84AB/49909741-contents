@@ -1,0 +1,43 @@
+export("hclustcompro_app","CAdist","adjacency","hclustcompro_select_alpha","arrondi","hclustcompro_subdivide",
+       "seriograph","hclustcompro_detail_resampling","overlap",
+       "timerange","hclustcompro","hclust","perioclust")
+
+importFrom("FactoMineR",      "CA")
+importFrom("grDevices",       "colorRampPalette","recordPlot","rainbow")
+importFrom("tidyr",           "gather")
+importFrom("dplyr",           "mutate","group_by","summarise_all","funs","ungroup","inner_join","arrange",
+                              "summarise","first","last","filter")
+importFrom("ggplot2",         "ggplot","geom_bar","geom_col","aes_string","aes","ggtitle","labs","xlab",
+                              "ylab","facet_wrap","position_stack","coord_flip","facet_grid","scale_fill_manual",
+                              "scale_y_continuous","theme","element_text","element_blank","scale_x_discrete",
+                              "geom_segment","margin","geom_point","scale_colour_gradientn","geom_line",
+                              "scale_x_continuous","geom_text","scale_y_reverse","ylim","element_line","geom_hline")
+importFrom("ggdendro",        "dendro_data","ggdendrogram","segment","label")
+importFrom("plotly",          "plot_ly","add_lines","add_segments","add_markers","layout","subplot")
+importFrom("graphics",        "barplot","plot","abline","legend","lines","points","text","mtext",
+                              "axis","boxplot","image","par","plot.new", "segments", "symbols")
+importFrom("stats",           "median","quantile","cophenetic", "cor","dist","as.dist","chisq.test","cutree",
+                              "optimize","hclust","rect.hclust","reorder","coef","sd","lm","qnorm","na.omit",
+                              "approx","density")
+importFrom("utils",           "setTxtProgressBar","txtProgressBar","data","str")
+importFrom("stringr",         'str_sub','str_split','fixed','str_extract')
+importFrom("colorspace",      "rainbow_hcl")
+importFrom("crayon",          "blue")
+importFrom("shinydashboard",  "box")
+importFrom("shinyjqui",       "jqui_resizable")
+importFrom("fpc",             "cluster.stats")
+importFrom("sp",              "CRS","coordinates<-","proj4string<-")
+importFrom("ks",              "kde","Hscv")
+importFrom("cluster",         "silhouette")
+
+
+import('foreign','grid','shiny','leaflet','rgdal','rstudioapi','ape','htmlwidgets','shinythemes','markdown')
+import("shinyjs",     except=c("runExample","alert"))
+import('maptools',    except=c("label"))
+import("shinyWidgets","scatterD3","explor","mapview")
+
+S3method("print",     "hclustcompro_cl")
+S3method("print",     "selectAlpha_obj")
+S3method("print",     "seriograph")
+S3method("summary",   "selectAlpha_obj")
+
