@@ -1,6 +1,6 @@
 export("hclustcompro_app","CAdist","adjacency","hclustcompro_select_alpha","arrondi","hclustcompro_subdivide",
        "seriograph","hclustcompro_detail_resampling","overlap",
-       "timerange","hclustcompro","hclust","perioclust")
+       "timerange","hclustcompro","hclust","perioclust","mapclust","mapclust_cut_tree","mapclust_app")
 
 importFrom("FactoMineR",      "CA")
 importFrom("grDevices",       "colorRampPalette","recordPlot","rainbow")
