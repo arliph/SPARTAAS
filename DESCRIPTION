@@ -1,7 +1,7 @@
 Package: SPARTAAS
 Type: Package
 Title: Statistical Methods for Archaeology
-Version: 1.0.0b
+Version: 0.9.0
 Authors@R: c(person("Lise","Bellanger", role = "aut",
                      email = "lise.bellanger@univ-nantes.fr"),
              person("Philippe","Husi", role = "aut",
