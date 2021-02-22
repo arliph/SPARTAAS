@@ -7,7 +7,7 @@ Statistical pattern recognition and dating using archaeological artefacts assemb
 SPARTAAS is an [R](https://www.r-project.org) package with R functions that are
 useful to archeologists.
 
-This current version is 1.0.1 ahead of the CRAN version. 
+This current version is 1.1.0 ahead of the CRAN version. 
 
 New feature : mapclust method (mapclust, mapclust_cut_tree, mapclust_app).
 
