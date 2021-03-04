@@ -10,7 +10,7 @@ useful to archeologists.
 
 This current version is 1.1.0 ahead of the CRAN version. 
 
-New feature : mapclust method (mapclust, mapclust_cut_tree, mapclust_app).
+New features : mapclust method (mapclust, mapclust_cut_tree, mapclust_app).
 
 ---
 
