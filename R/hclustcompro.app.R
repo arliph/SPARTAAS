@@ -1,5 +1,5 @@
 hclustcompro_app <- function() {
-  appDir <- system.file("shiny-examples", "perio.app", package = "SPARTAAS")
+  appDir <- system.file("shiny-examples", "hclustcompro.app", package = "SPARTAAS")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `SPARTAAS`.", call. = FALSE)
   }
