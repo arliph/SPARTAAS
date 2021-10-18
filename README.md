@@ -1,16 +1,29 @@
-# SPARTAAS
+# <a target="_blank" href="https://spartaas.frama.io/r-package/index.html">SPARTAAS</a>
 Statistical pattern recognition and dating using archaeological artefacts assemblages
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SPARTAAS)](https://cran.r-project.org/package=SPARTAAS)
 ---
 
-SPARTAAS is an [R](https://www.r-project.org) package with R functions that are
+SPARTAAS is an <a target="_blank" href="https://www.r-project.org">R</a> package with R functions that are
 useful to archeologists.
 
 
 This current version is 1.1.0 ahead of the CRAN version. 
 
 New features : mapclust method (mapclust, mapclust_cut_tree, mapclust_app).
+
+---
+
+### Installation
+
+Depuis la consol R
+
+```
+install.packages("devtools")
+library("devtools")
+
+install_github("arliph/SPARTAAS")
+```
 
 ---
 
@@ -26,4 +39,4 @@ merchantability or fitness for a particular purpose.  See the GNU
 General Public License for more details.
 
 A copy of the GNU General Public License, version 3, is available at
-<https://www.r-project.org/Licenses/GPL-3>
+<a target="_blank" href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a>
