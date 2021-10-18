@@ -16,7 +16,7 @@ New features : mapclust method (mapclust, mapclust_cut_tree, mapclust_app).
 
 ### Installation
 
-Depuis la consol R
+Depuis R
 
 ```
 install.packages("devtools")
