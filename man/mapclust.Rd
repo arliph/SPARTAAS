@@ -93,7 +93,7 @@ P. HUSI
 }
 
 \references{
-Bellanger L., Coulon A. and Husi P. (2021) Determination of cultural areas based on medieval pottery using an original divisive hierarchical clustering method with geographical constraint (MapClust), Journal of Archaeological Science, Volume 132 \href{https://doi.org/10.1016/j.jas.2021.105431}{doi:10.1016/j.jas.2021.105431}.
+Bellanger L., Coulon A. and Husi P. (2021) Determination of cultural areas based on medieval pottery using an original divisive hierarchical clustering method with geographical constraint (MapClust), Journal of Archaeological Science, Volume 132 \doi{10.1016/j.jas.2021.105431}.
 
 Bellanger L., Husi P., Laghzali Y. (2015). Spatial statistic analysis of dating using pottery: an aid to the characterization of cultural areas in West Central France. In : Traviglia A. ed., Across Space and Time, Proceedings of the 41th International Conference on Computer Applications and Quantitative Methods in Archaeology (CAA-2013), Perth (Australie), Amsterdam University Press : 276-282.
 

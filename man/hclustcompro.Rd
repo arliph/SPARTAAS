@@ -94,6 +94,4 @@ constraint <- adjacency(network)
 
 #You can also run hclustcompro with the dist matrix directly
 hclustcompro(D1 = distance, D2 = constraint, alpha = 0.7, k = 4)
-
-
 }

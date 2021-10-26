@@ -126,8 +126,8 @@ spatialpatches2 <- function (x, y, z, w, Lim.D = 100, A.li = 0, modproj = NA, ml
   }
 
   # prepare data
-  Xsta <- x		#Xsta <- bid$x
-  Ysta <- y		#Ysta <- bid$y
+  Xsta <- x
+  Ysta <- y
   Zsta <- z
   Wsta <- w/sum(w,na.rm=TRUE)
 
@@ -1528,7 +1528,7 @@ documentation: \n> ?mapclust
                         dlim=classification$dlim,
                         historique=classification$historique,
                         Plabel=classification$Plabel,
-                        InertiaWithin = classification$InertiaWithin,
+                        InertiaWithin=classification$InertiaWithin,
                         Moran=classification$Moran,
                         dendrogram=classification$dendrogram,
                         dendrogram_ggplot=classification$dendrogram_ggplot,
@@ -1561,7 +1561,7 @@ call: ")
 value:
       .. $X               The x-coordinates data you used
       .. $Y               The y-coordinates data you used
-      .. $var             The regionalized variable.s data you used
+      .. $var             The regionalized variable(s) data you used
       .. $label           The label vector you used
       .. $density         The estimate density based on var. Equal to var if you used a unidimensionnal density variable
       .. $cluster         The vector of cluster of the select partition

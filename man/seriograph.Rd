@@ -76,7 +76,7 @@ The function returns a list (class: seriograph).
 }
 
 \references{
-Desachy B. (2004). Le sériographe EPPM : un outil informatisé de sériation graphique pour tableaux de comptages. In: Revue archéologique de Picardie, n°3-4, 2004. Céramiques domestiques et terres cuites architecturales. Actes des journées d'étude d'Amiens (2001-2002-2003) pp. 39-56 \href{https://doi.org/10.3406/pica.2004.2396}{doi:10.3406/pica.2004.2396}
+Desachy B. (2004). Le sériographe EPPM : un outil informatisé de sériation graphique pour tableaux de comptages. In: Revue archéologique de Picardie, n°3-4, 2004. Céramiques domestiques et terres cuites architecturales. Actes des journées d'étude d'Amiens (2001-2002-2003) pp. 39-56 \doi{10.3406/pica.2004.2396}
 }
 \author{
 B. DESACHY
