@@ -12,6 +12,7 @@ Authors@R: c(person("Lise","Bellanger", role = "aut",
              person("Benjamin","Martineau", role = "ctb")
              )
 Maintainer: Arthur Coulon <arthur-coulon@outlook.fr>
+URL: https://spartaas.frama.io/r-package/index.html
 Description: Statistical pattern recognition and dating using archaeological artefacts assemblages.
     Package of statistical tools for archaeology.
     hclustcompro(perioclust): Bellanger Lise, Coulon Arthur, Husi Philippe (2020, ISBN:978-3-030-60103-4).
