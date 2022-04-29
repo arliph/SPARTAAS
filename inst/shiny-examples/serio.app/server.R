@@ -1,3 +1,143 @@
+EPM <- function(x) {
+  x <- as.matrix(x)
+
+  x[is.na(x)] <- 0
+  ni. <- rep(1,nrow(x))
+  nj. <- margin.table(x, margin = 2)
+  n. <- sum(nj.)
+
+  TabInde <- (nj.%*%t(ni.)/n.)
+  TabInde <- t(TabInde)
+  x <- prop.table(x, margin = 1)
+  TabEcart <- x - TabInde
+  TabEcart <- as.data.frame(TabEcart)
+  return(TabEcart)
+}
+
+plot_EPPM <- function(x,show,permute,col_weight) {
+  if(is.table(x)){
+    x <- as.data.frame(x)
+    x <- matrix(x[,3],
+                ncol=sqrt(length(x[,2])),
+                dimnames=list(unique(x[,1]),unique(x[,1])))
+    x <- as.data.frame(x)
+  }
+  if(is.matrix(x)){x <- as.data.frame(x)}
+  if(!is.data.frame(x)){stop("x is not a data frame.")}
+  for (i in 1:length(x[1,])){
+    if(!(sum(x[,i]) == round(sum(x[,i])))){stop("The data frame must contains integers.")}
+  }
+  .data <- c()
+  Cluster <- c()
+  labels <- factor(rownames(x),levels = rev(unique(rownames(x))))
+  #permute type in x
+  if(permute){
+
+    if(show == "EPPM"){
+      ecart <- as.data.frame(EPM(x))
+      ecart[ecart < 0] <- 0
+      i <- seq(nrow(ecart),1)
+      barycenter <- colSums(ecart * i) / colSums(ecart)
+      x <- x[,order(barycenter)]
+    }else{
+      i <- seq(nrow(x),1)
+      barycenter <- colSums(x * i) / colSums(x)
+      x <- x[,order(barycenter)]
+    }
+
+  }
+  rowsum <- rowSums(x)
+  #add Weight to x
+  x <- cbind(x, Weight = rowSums(x) / sum(x) * rowSums(x))
+  #data
+  data <- as.data.frame(x)
+  data <- mutate(data,ens = labels,rowsum = rowsum)
+  data <- gather(data,key = "type", value = "frequency",-.data$ens,-.data$rowsum, factor_key = TRUE)
+  data <- mutate(data,frequency = .data$frequency / .data$rowsum)
+  #remove col rowsum
+  data <- data[-2]
+  data$frequency[is.na(data$frequency)] <- 0
+
+  #EPPM
+  ecart <- as.data.frame(EPM(x[-length(x[1,])]))
+  save_ecart <- ecart
+  ecart <- cbind(ecart,Weight=c(0))
+  ecart[ecart < 0] <- 0
+  ecart <- mutate(ecart,ens = labels)
+  ecart <- gather(ecart,key = "type", value = "EPPM", -.data$ens, factor_key = TRUE)
+  ecart$EPPM[ecart$type == "Weight"] <- 0
+
+  # Join data and EPPM
+  data <- inner_join(data,ecart,by = c("ens", "type"))
+  data <- mutate(data,frequency = .data$frequency - .data$EPPM)
+  data <- gather(data,key = "legend", value = "frequency", -.data$ens,
+                 -.data$type, factor_key = TRUE)
+  #if insert hiatus in df replace NA by 0 (NA are generating by divising by 0 (rowsum of a hiatus is 0))
+  data[is.na(data)] <- 0
+  #center (div /2 et copy for one part - and the other +)
+  data <- rbind(data,data)
+  data <- mutate(data,frequency = .data$frequency * c(rep(.5, nrow(data)/2), rep(-.5, nrow(data)/2)))
+
+  #color for Weight
+  tmp <- data$frequency[data$type == "Weight"]
+  levels(data$legend) <- c(levels(data$legend),"1","2","3","4","5","6","7","8","9","10","Weight")
+  data$legend[data$type == "Weight"] <- "Weight"
+
+  breaks <- c("frequency","EPPM","Weight")
+
+  #define the color
+  freq <- c("frequency","frequencies","freq","fq","fr\u00E9quence","fr\u00E9quences","fr\u00E9q")
+  EPPM <- c("EPPM","ecart","\u00E9cart","ecarts","\u00E9carts")
+  if(show %in% freq){
+    color <- c("frequency"="#bebebe","EPPM"="#bebebe","Weight"="#7f7f7f")
+    #remove EPPM from legend
+    breaks <- c("frequency","Weight")
+    default_col <- "#bebebe"
+  }else{
+    if(show %in% EPPM){
+      color <- c("frequency"=NA,"EPPM"="black","Weight"="#7f7f7f")
+      #remove frequency from legend
+      breaks <- c("EPPM","Weight")
+      default_col <- NA
+    }else{
+      #default color grey: frequency, black: EPPM, my_palette: weight
+      color <- c("frequency"="#bebebe","EPPM"="black","Weight"="#7f7f7f")
+      default_col <- NA
+    }
+  }
+  #ggplot
+  p <- ggplot(data = data) +
+    facet_grid( ~type, scales = "free", space = "free_x") +
+    geom_col(aes_string(x = "ens", y = "frequency", fill = "legend"), width = 1) +
+    scale_x_discrete(labels = rev(rownames(x))) +
+    coord_flip() +
+    scale_fill_manual(values = color,
+                      aesthetics = "fill",
+                      limits = breaks,
+                      na.value = default_col
+    ) +
+    scale_y_continuous(breaks = c(-.1,.1),labels = c("","20% ")) +
+    labs(
+      title = "Seriograph",
+      subtitle = "EPPM (Ecart Positif au Pourcentage Moyen) Positive Deviation at Average Percentage",
+      caption = "Warnings: The frequencies are calculated independently for each element (row).
+You can see the relative number of observations in the Weight column"
+    ) +
+    theme_grey(base_size = 15) + geom_segment(aes(x = 0, y = -.04, xend = 0, yend = .04),
+                                              linetype = "blank") +
+    theme(legend.position = "bottom",
+          panel.spacing = unit(.2, "lines"),
+          strip.text.x = element_text(angle = 90),
+          axis.text.x = element_text(hjust=1,margin = margin(t = -13)),
+          axis.ticks.length = unit(.5, "cm"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          plot.caption = element_text(face = "italic", hjust = 0)
+    )
+  plot(p)
+}
+
 server <- function(input, output, session) {
   #------------------------------------------------------#
   #  modalDialog import
@@ -115,7 +255,7 @@ server <- function(input, output, session) {
   output$EPPM <- renderPlot({
     cont <- values[["data1"]]
     show <- c("both","frequency","EPPM")[as.numeric(input$show)]
-    seriograph(cont, permute=input$permute, col_weight = input$col_weight, show = show)
+    plot_EPPM(cont, permute=input$permute, col_weight = input$col_weight, show = show)
     values[["seriograph"]] <- recordPlot()
   })
 

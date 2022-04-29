@@ -70,7 +70,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                       sidebarPanel(style="border-width:0px;border-color:#222222;",
                                                    h1("R Package:"),
                                                    br(),
-                                                   HTML("<p>This method is part of the <a href='https://spartaas.frama.io/r-package/index.html'>SPARTAAS</a> package.</p>
+                                                   HTML("<p>This method is part of the <a href='https://spartaas.gitpages.huma-num.fr/r-package/index.html'>SPARTAAS</a> package.</p>
                                                         <p>If you are interested you can install our R package avaible on the <a href='https://cran.r-project.org/package=SPARTAAS'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS'>GitHub</a>.</p>
 
                                                         ")

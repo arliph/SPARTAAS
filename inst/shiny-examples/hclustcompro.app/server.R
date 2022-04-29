@@ -1041,7 +1041,7 @@ server <- function(input, output, session) {
 
     #dendrogram
     title <- paste("Cluster Dendrogram with alpha =",alpha)
-    subtitle <- paste("The mixing matrix is made of ",(1-alpha) * 100,"% of D1 and ",alpha * 100,"% of D2.")
+    subtitle <- paste("The mixing matrix is made of ",alpha * 100,"% of D1 and ",(1-alpha) * 100,"% of D2.")
     plot(tree,
          h=-1, main = title, sub = subtitle, xlab=paste0("dist.mixt, method: \"",values[["method"]],"\""))
     if(length(input$k) == 0){

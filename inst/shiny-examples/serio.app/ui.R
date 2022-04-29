@@ -61,9 +61,9 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                         sidebarPanel(style="",
                                                      h1("R Package:"),
                                                      br(),
-                                                     HTML("<p>This method is part of the <a href='https://spartaas.frama.io/r-package/index.html'>SPARTAAS</a> package.</p>
-                                                        <p>If you are interested you can install our R package avaible on the <a href='https://cran.r-project.org/package=SPARTAAS'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS'>GitHub</a>.</p>
-
+                                                     HTML("<p>This method is part of the <a href='https://spartaas.gitpages.huma-num.fr/r-package/index.html' target='_blank'>SPARTAAS</a> package.</p>
+                                                        <p>If you are interested you can install our R package avaible on the <a href='https://cran.r-project.org/package=SPARTAAS' target='_blank'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS' target='_blank'>GitHub</a>.</p>
+                                                        <p>There is also a macro version in LibreOffice Calc. You can find it <a href='https://abp.hypotheses.org/le-programme-bassin-parisien/les-projets/les-projets-associes-au-programme/outils-danalyse-graphique-des-donnees' target='_blank'>here</a>.</p>
                                                         ")
 
                                         ),
@@ -92,7 +92,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                    label_on = "Seriation",
                                                    label_off = "Seriation",
                                                    icon_on = icon("check"),
-                                                   icon_off = icon("remove"),
+                                                   icon_off = icon("times"),
                                                    value = TRUE
                                                  ),
                                                  selectInput("show", label = "Show", choices = list("both" = 1,
@@ -139,7 +139,8 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                the proportion of each class of their workforce is displayed on
                                                the seriograph (weight column). We have generalized this
                                                representation
-                                               for other contingency data with hclustcompro object."),
+                                               for other contingency data with hclustcompro object.
+                                               The seriograph can be used in a strictly deductive way, by blocking the order of the rows (archaeological contexts) when their succession is known, and by reordering only the columns, in order to examine the chronological behaviour of the variables, and thus to see in particular what does not obey a serial evolution: cyclical phenomena, or the problems of intrusion and residuality."),
                                                circle = TRUE, status = "danger", icon = icon("question"),
                                                width = "500px",
                                                size = "sm",right=TRUE,
@@ -210,6 +211,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
 <hr>
 <h3 id=\"seriograph\">Seriograph</h3>
 <p>We have chosen the serigraph (Desachy 2004). This tool makes it possible to highlight the evolution of ceramics over time as well as to understand the commercial relations thanks to the imported ceramics. The percentages of each category of ceramics per set are displayed. The percentages are calculated independently for each set (row). The display of the percentages allows comparison of the different sets but does not provide information on the differences in numbers. To fill this gap, the proportion of the numbers in each class is displayed on the seriograph (weight column).</p>
+<p>The seriograph can be used in a strictly deductive way, by blocking the order of the rows (archaeological contexts) when their succession is known, and by reordering only the columns, in order to examine the chronological behaviour of the variables, and thus to see in particular what does not obey a serial evolution: cyclical phenomena, or the problems of intrusion and residuality.</p>
 
 <p><img src=\"GS/seriograph.png\"></p>
 
