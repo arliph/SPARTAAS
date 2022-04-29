@@ -14,10 +14,7 @@ useful to archeologists.
 Depuis R
 
 ```
-install.packages("devtools")
-library("devtools")
-
-install_github("arliph/SPARTAAS")
+install.packages("SPARTAAS")
 ```
 
 ---
