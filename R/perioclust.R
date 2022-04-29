@@ -183,6 +183,14 @@ perioclust <- hclustcompro <- function(D1,D2,alpha = "EstimateAlphaForMe",k = NU
   #
   #===============================================================================
 
+  sort = TRUE
+  if(is.null(labels(D1))){
+    sort <- FALSE
+  }
+  if(is.null(labels(D2))){
+    sort <- FALSE
+  }
+
   METHODS <- c("ward.D","single","complete","average","mcquitty","median","centroid","ward.D2")
   if (method == "ward") {
     message("The \"ward\" method has been renamed to \"ward.D\"; note new avaible method \"ward.D2\"")
@@ -244,7 +252,7 @@ perioclust <- hclustcompro <- function(D1,D2,alpha = "EstimateAlphaForMe",k = NU
   D1 <- as.matrix(D1)
   max <- dim(D1)[1]
   D2 <- as.matrix(D2)
-  sort <- TRUE
+
   if(FALSE %in% (sort(rownames(D1)) == sort(rownames(D2)))){
     warning("The names of D1 and D2 are not the same.")
     sort <- FALSE
@@ -302,6 +310,7 @@ perioclust <- hclustcompro <- function(D1,D2,alpha = "EstimateAlphaForMe",k = NU
 
   #CAH
   tree <- SPARTAAS::hclust(d=D1,method=method,d2=D2,alpha=alpha)
+
   if(title == "notitle"){
     title <- paste("Dendrogram with alpha =",alpha)
   }
@@ -579,8 +588,6 @@ seriograph <- function(cont, order = NULL, insert = NULL, show = "both", permute
       remove <- Alpha2Int(remove)
     }
     Cluster <- c(0)
-    plot.new()
-    print(hclustcompro_cl$cutree)
 
     split <- Alpha2Int(order)
     seq <- hclustcompro_cl$cluster
@@ -611,15 +618,7 @@ seriograph <- function(cont, order = NULL, insert = NULL, show = "both", permute
       }
       pelt <- elt
     }
-    message(blue("Distribution of elements in the different periods:\n"))
-    if(!is.null(hclustcompro_cl$oldcluster)){
-      col <- colorspace::rainbow_hcl(length(unique(hclustcompro_cl$oldcluster)), c = 80, l = 60, start = 0,
-                   end = 360*(length(unique(hclustcompro_cl$oldcluster))-1)/(length(unique(hclustcompro_cl$oldcluster))))
-      col <- col[sort(trunc(unique(hclustcompro_cl$cluster)))]
-    }else{
-      col <- colorspace::rainbow_hcl(length(unique(hclustcompro_cl$cluster)), c = 80, l = 60, start = 0,
-                   end = 360*(length(unique(hclustcompro_cl$cluster))-1)/(length(unique(hclustcompro_cl$cluster))))
-    }
+    message(blue("Distribution of elements in the different clusters:\n"))
 
     if(length(remove) >= 1){
       removeseq <- which(seq >= 900)
@@ -628,23 +627,6 @@ seriograph <- function(cont, order = NULL, insert = NULL, show = "both", permute
     }else{
       print(seq)
     }
-    for(i in 1:length(unique(seq))){
-      x <- mean(which(seq[hclustcompro_cl$tree$order] == sort(unique(seq))[i]))
-      graphics::mtext(paste0(LETTERS,LETTERS,LETTERS), side = 1, line = .5, at = x, col = "white", cex=1.5)
-    }
-    for(i in 1:length(unique(seq))){
-      if(!sort(unique(seq))[i] >= 900){
-        x <- mean(which(seq[hclustcompro_cl$tree$order] == sort(unique(seq))[i]))
-        y <- which(unique(seq[hclustcompro_cl$tree$order]) == sort(unique(seq))[i])
-        graphics::mtext(paste0(sort(unique(seq))[i]), side = 1, line = .5, at = x, col = col[y], cex=1.5)
-      }else{
-        x <- mean(which(seq[hclustcompro_cl$tree$order] == sort(unique(seq))[i]))
-        y <- which(unique(seq[hclustcompro_cl$tree$order]) == sort(unique(seq))[i])
-        graphics::mtext("Removed", side = 1, line = .5, at = x, col = col[y], cex = 1)
-      }
-    }
-    graphics::mtext("Period:",side = 1, line = .5, at = 0, col = "#767676", cex=1.2)
-    dend <- grDevices::recordPlot()
 
     cont <- cont[sort(labels(cont)[[1]]),]
     cont2 <- dplyr::mutate(cont, Cluster = factor(seq))
@@ -658,7 +640,7 @@ seriograph <- function(cont, order = NULL, insert = NULL, show = "both", permute
       cont2 <- cont2[-remove,]
     }
     cont2 <- cont2[order(as.numeric(rownames(cont2)),decreasing = T),]
-    rownames(cont2) <- as.character(paste0("Period.",rownames(cont2)))
+    rownames(cont2) <- order
 
     if(!is.null(insert)){
       #insert hiatus
@@ -740,7 +722,6 @@ seriograph <- function(cont, order = NULL, insert = NULL, show = "both", permute
       structure(
         list(
           seriograph = res$seriograph,
-          dendrogram = dend,
           contingency = res$contingency,
           frequency = res$frequency,
           ecart = res$ecart
@@ -1124,6 +1105,7 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
   # method                The method to use in hclust (see doc)
   #
   #===============================================================================
+
   METHODS <- c("ward.D", "single", "complete", "average", "mcquitty",
                "median", "centroid", "ward.D2")
   if (method == "ward") {
@@ -1184,6 +1166,10 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
     acc <- 1;
     message("The minimal value allowed for acc is 1.")
   }
+  seq_acc=0.001
+  if(acc==1){seq_acc=0.1}
+  if(acc==2){seq_acc=0.01}
+  if(acc==3){seq_acc=0.001}
   #test
   if(!"dist" %in% class(D1)){
     #matrix ?
@@ -1271,9 +1257,9 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
   if(suppl_plot){
     #estime alpha
     corCrit <- c()
-    for(i in seq(0,1,0.01)){corCrit <- c(corCrit,corCriterion_(i))}
+    for(i in seq(0,1,seq_acc)){corCrit <- c(corCrit,corCriterion_(i))}
     index <- which(corCrit == min(corCrit))
-    alpha <- seq(0,1,0.01)[index]
+    alpha <- seq(0,1,seq_acc)[index]
 
     add_text_resamp <- ""
     if(resampling){
@@ -1322,7 +1308,7 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
 
 
     plot(
-      corCriterion_,from=0,to=1,
+      seq(0,1,seq_acc),corCriterion_(seq(0,1,seq_acc)),type="l",
       xlab = expression(alpha),
       ylab = expression(CorCrit[alpha]),
       ylim=c(0,1),
@@ -1335,9 +1321,9 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
       xaxt= "n",
       lwd=1
     )
-    correlation_curve <- cor_(seq(0,1,.01))
-    lines(seq(0,1,.01),correlation_curve[[1]],lty=3,col="grey60")
-    lines(seq(0,1,.01),correlation_curve[[2]],lty=3,col="grey60")
+    correlation_curve <- cor_(seq(0,1,seq_acc))
+    lines(seq(0,1,seq_acc),correlation_curve[[1]],lty=3,col="grey60")
+    lines(seq(0,1,seq_acc),correlation_curve[[2]],lty=3,col="grey60")
     axis(
       side = 1,
       at = c(.1,.2,.3,.4,.5,.6,.7,.8,.9),
@@ -1399,17 +1385,44 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
     #estime alpha
     #alpha <- stats::optimize(corCriterion_,lower=0,upper=1)$minimum
     corCrit <- c()
-    for(i in seq(0,1,0.01)){corCrit <- c(corCrit,corCriterion_(i))}
+    for(i in seq(0,1,seq_acc)){corCrit <- c(corCrit,corCriterion_(i))}
     index <- which(corCrit == min(corCrit))
-    alpha <- seq(0,1,0.01)[index]
+    alpha <- seq(0,1,seq_acc)[index]
 
-    return(structure(
-      list(alpha = arrondi(alpha,acc),
-           more = "Need suppl_plot = FALSE!"
-      ),
-      class = c("selectAlpha_obj","list")
-    )
-    )
+    if(resampling){
+      pb <- utils::txtProgressBar(min = 0, max = length(D1[1,]), style = 3)
+      set <- c()
+      res <- c()
+      for (i in 1:length(D1[1,])){
+        for(j in sample((1:(length(D1[,1])))[-i],iter,replace=FALSE)){
+          if(i!=j){
+            tmp <- stats::optimize(corCriterion_clone,lower=0,upper=1,a=i,b=j)
+            set <- c(set,tmp$minimum)
+          }
+        }
+        utils::setTxtProgressBar(pb, i)
+      }
+      conf <- arrondi(quantile(set,c(0.025,0.975)),acc)
+      close(pb)
+      return(structure(
+        list(alpha = arrondi(alpha,acc),
+             conf = conf,
+             more = "Need suppl_plot = FALSE!"
+        ),
+        class = c("selectAlpha_obj","list")
+      )
+      )
+    }else{
+      return(structure(
+        list(alpha = arrondi(alpha,acc),
+             more = "Need suppl_plot = FALSE!"
+        ),
+        class = c("selectAlpha_obj","list")
+      )
+      )
+    }
+
+
   }
 
 
