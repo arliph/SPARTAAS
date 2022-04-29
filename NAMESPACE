@@ -16,7 +16,7 @@ importFrom("ggdendro",        "dendro_data","ggdendrogram","segment","label")
 importFrom("plotly",          "plot_ly","add_lines","add_segments","add_markers","layout","subplot")
 importFrom("graphics",        "barplot","plot","abline","legend","lines","points","text","mtext",
                               "axis","boxplot","image","par","plot.new", "segments", "symbols")
-importFrom("stats",           "median","quantile","cophenetic", "cor","dist","as.dist","chisq.test","cutree",
+importFrom("stats",           "median","quantile","cophenetic","cor","dist","as.dist","chisq.test","cutree",
                               "optimize","hclust","rect.hclust","reorder","coef","sd","lm","qnorm","na.omit",
                               "approx","density")
 importFrom("utils",           "setTxtProgressBar","txtProgressBar","data","str")
@@ -31,12 +31,11 @@ importFrom("ks",              "kde","Hscv")
 importFrom("cluster",         "silhouette")
 importFrom("htmltools",       "htmlEscape")
 importFrom("stats",           "as.hclust")
+import("shinyjs",             except=c("runExample","alert"))
+import('maptools',            except=c("label"))
 
 import('foreign','grid','shiny','leaflet','rgdal','rstudioapi','ape','htmlwidgets','shinythemes','markdown')
-import("shinyjs",     except=c("runExample","alert"))
-import('maptools',    except=c("label"))
 import("shinyWidgets","scatterD3","explor","mapview")
-
 
 S3method("print",     "hclustcompro_cl")
 S3method("print",     "selectAlpha_obj")
