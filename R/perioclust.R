@@ -1302,8 +1302,8 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
            bquote(hat(alpha)^"*" == .(arrondi(mean(res),acc))))
       boxplot <- grDevices::recordPlot()
 
-      add_text_resamp <- paste(" The IC95% is calculated with",iter,
-                               "clones out of",length(D1[1,])-1,"available.")
+      add_text_resamp <- paste(" The IC95% is calculated with",iter,'*',length(D1[1,])-1,
+                               "clones out of",length(D1[1,])-1,"*",length(D1[1,])-1,"available.")
     }
 
 
