@@ -7,12 +7,9 @@ Divise hierarchical Clustering using Spatialpatches algorithm.
 
 \description{
 
-\href{https://spartaas.frama.io/r-package/mapclust.html}{\code{Get started with MapClust}}
+This function performs a divisive hierarchical clustering on a regionalised variable using the spatial patches algorithm (Woillez et al. 2007; Woillez, Rivoirard and Petitgas 2009). It is a top-down hierarchical clustering with a geographical constraint. It is possible to cut the tree by clicking on the dendrogram at the desired level. The results include a description of the clusters and graphics. When slicing the dendrogram, you can look at the two plots (WSSPlot and AveSilPlot) that show the relatively good quality of the partitions. The first shows the Within Sum of Square (WSS) for each partition and you can use the elbow approach to select a partition. The second graph shows the average silhouette width. This index is between -1 and 1. The closer it is to 1, the better the partition. See \link[cluster]{silhouette}.
 
-This function performs a divisive hierarchical clustering on a regionalized variable using spatial patches algorithm (Woillez and al. 2007; Woillez, Rivoirard and Petitgas 2009). It is a hierarchical top-down clustering with geographical constraint. It is possible to cut the tree by clicking on the dendrogram at the level you want. Results include description of the clusters and graphics. When cutting the dendrogram you can look at the two plots (WSSPlot and AveSilPlot) which shows the relative good quality of the partitions. The first one shows the Within Sum of Square (WSS) for each partition and you can use the Elbow approach in order to select one partition. The second plot show the average silhouette width. This index is between -1 and 1. The closer it is to 1 the more the partition is good. See the fonction help page of \code{silhouette{cluster}}
-
-
-See \link[SPARTAAS]{mapclust_cut_tree} if you want cut the dendrogram to another dlim or number of clusters without re run \code{mapclust()}.
+If you want to cut the dendogram to a different dlim or number of clusters, you can do so without re-running  \code{mapclust() with \link[SPARTAAS]{mapclust_cut_tree}}.
 }
 \usage{
 mapclust(
@@ -29,32 +26,32 @@ mapclust(
 
 \arguments{
   \item{coord}{
-The x-coordinates (longitude) and the y-coordinates (latitude) data.frame or matrix dimension 2.
+The x (longitude) and y (latitude) coordinates of the data.frame or matrix dimension 2.
 }
   \item{var}{
-The regionalized variable(s) of interest
+The regionalised variable(s) of interest
 }
   \item{label}{
-(optional) The names of the samples or an id. Must be factor.
+(optional) The names of the samples or an identifier. Must be a factor.
 }
   \item{iter}{
-The number of iterations. The number of different dlim you want to test. (must be higher than 10)
+The number of iterations. The number of different dlim you want to test (must be greater than 10).
 }
   \item{Plabel}{
-Logical parameter for activate or not the print of labels on the dendrogram
+Logical parameter to activate or not the printing of labels on the dendrogram.
 }
   \item{lonlat}{
-Logical parameter for activate or not the cartography in lonlat system with Leaflet (basemap)
+Logical parameter to activate or not the cartography in lonlat system with leaflet (base map).
 }
   \item{positive_var}{
-logical parameter defining whether your variable of interest is positive or not
+logical parameter that defines whether your variable of interest is positive or not.
 }
   \item{n}{
-Number of groups. If NULL you can select the number of groups by clicking on the dendrogram
+Number of groups. If NULL, you can select the number of groups by clicking on the dendrogram.
 }
 }
 \details{
-Dlim is the select minimum distance from sample to patch centre: to identify patches (units are those of coordinates). The dlim is automatically initialized and the user does not need to use it. The minimal data are data frame or matrix with at least 3 columns.
+Dlim is the selected minimum distance from the sample to the patch centre: to identify patches (units are those of coordinates). The dlim is automatically initialised and does not need to be set by the user. The minimum data is a data frame or matrix with at least 3 columns.
 }
 \value{
 the function returns a list.
@@ -68,22 +65,22 @@ the function returns a list.
 \item{WSSPlot}{The Within Sum of Square plot (for each partition)}
 \item{silhouette}{The silhouette plot of the selected partition}
 \strong{Value:}
-\item{X}{The x-coordinates data you used}
-\item{Y}{The y-coordinates data you used}
-\item{var}{The regionalized variable(s) data you used}
-\item{label}{The label vector you used}
-\item{density}{The estimate density based on var. Equal to var if you used a unidimensionnal density variable}
-\item{cluster}{The vector of cluster of the selected partition}
-\item{Plabel}{Logical parameter for activate or not the print of labels on the dendrogram}
-\item{fullhist}{The composition cluster for each observation}
-\item{hist}{The composition cluster without duplicates (matches to leaf of the dendrogram)}
+\item{X}{The x-coordinate data you have used}
+\item{Y}{The y-coordinate data you have used}
+\item{var}{The regionalized variable(s) data you have used}
+\item{label}{The label vector you have used}
+\item{density}{The estimated density based on var. Equal to var if you used a unidimensional density variable.}
+\item{cluster}{The cluster vector of the selected partition}
+\item{Plabel}{Logical parameter to activate or not the printing of labels on the dendrogram}
+\item{fullhist}{The compositional cluster for each observation}
+\item{hist}{The compositional cluster without duplicates (corresponds to the split on the dendogram)}
 \item{dlim}{The vector of the different limit distances}
 \item{cutdlim}{The select dlim for the cut of the current partition}
-\item{DiMatrix}{The matrix of Weighted Euclidiean distances}
+\item{DiMatrix}{The weighted euclidean distance matrix}
 \item{silhouetteData}{The silhouette data of the selected partition}
 \item{AveSilData}{The average silhouette value for each partition}
-\item{Moran}{The Moran index for each groups for each partitions}
-\item{lonlat}{Logical parameter if your coordinates are in longitude latitude format or not.}
+\item{Moran}{The Moran index for each group for each partition}
+\item{lonlat}{Logical parameter, whether your coordinates are in latitude-longitude format or not}
 }
 
 \author{

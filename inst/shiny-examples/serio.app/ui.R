@@ -26,6 +26,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
     ')),
 
                 tags$head(
+                  tags$link(rel = "icon", type = "image/gif", href = "https://spartaas.gitpages.huma-num.fr/r-package/img/lambda.png"),
                   tags$title("seriograph")
                 ),
                 #header panel
@@ -34,7 +35,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                               top = 0, left = 0, right = 0,
                               fixed = TRUE,
                               h2("seriograph: a graphic seriation tool for count tables"),
-                              div(span(strong("SPARTAAS | seriograph")),span("v1.0 ",style ="font-size:14px;"))
+                              div(span(strong("SPARTAAS | seriograph")))
                 ),
                 #footer
                 absolutePanel(style="z-index: 2000;padding: 0px; border-bottom: 0px solid #CCC; background: #fff;opacity: 1;",
@@ -62,7 +63,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                      h1("R Package:"),
                                                      br(),
                                                      HTML("<p>This method is part of the <a href='https://spartaas.gitpages.huma-num.fr/r-package/index.html' target='_blank'>SPARTAAS</a> package.</p>
-                                                        <p>If you are interested you can install our R package avaible on the <a href='https://cran.r-project.org/package=SPARTAAS' target='_blank'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS' target='_blank'>GitHub</a>.</p>
+                                                        <p>If you are interested you can install our R package available on the <a href='https://cran.r-project.org/package=SPARTAAS' target='_blank'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS' target='_blank'>GitHub</a>.</p>
                                                         <p>There is also a macro version in LibreOffice Calc. You can find it <a href='https://abp.hypotheses.org/le-programme-bassin-parisien/les-projets/les-projets-associes-au-programme/outils-danalyse-graphique-des-donnees' target='_blank'>here</a>.</p>
                                                         ")
 
@@ -228,63 +229,47 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
 <h2 id=\"data1\">The inputs</h2>
 <hr>
 <h3 id=\"seriation\">Seriation</h3>
-<p>This input allows you to activate or not the seriation of the columns. Matrix permutation uses an algorithm
-called \"reciprocal averages\". Each line is assigned a rank ranging from 1 to n the number of lines.
-A barycentre is calculated for each column by weighting according to the row rank. Finally,
-the columns are reorganized by sorting them by their barycentre.</p>
+<p>This input allows you to enable or disable the seriation of the columns. The matrix permutation uses an algorithm called 'reciprocal averages'. Each row is assigned a rank from 1 to n, the number of rows. For each column, a barycentre is calculated by weighting according to the row rank. Finally, the columns are reorganised by sorting them according to their barycentre.</p>
 <p><img src=\"GS/seriation.png\"></p>
 
 <h3 id=\"weight\">Weight color indicator</h3>
-<p>This input allows you to activate or not the coloration of the weight column in order to highlight
-the confidence related to the quantity of data.</p>
+<p>This input makes it possible to activate or not the coloring of the weight column in order to highlight the confidence related to the quantity of data.</p>
 <p><img src=\"GS/weight.png\"></p>
 
 <h3 id=\"show1\">Visualization</h3>
-<p>This input let you choose which element to plot. There are tree options : plot
-the Positive deviation from the average percentage (EPPM in French), plot the frequency or plot the both.
-The average percentage is calculated for each category (columns) on the total number of accounts
-(all classes combined).
-From the average percentage we recover for each category and for each rows the difference between
-the percentage of the
-category in the class with the average percentage. The EPPM corresponds to the notion of independence deviation
-(between rows and columns, between categories and time classes) in a chi-square test approach.
-Although this approach is fundamental in statistical analysis, independence deviations are here purely indicative
-and are not associated with a p_value that could determine the significance of deviations.</p>
+<p>This input allows you to select the element to be plotted. There are tree options: plot the positive deviation from the average percentage (EPPM in French), plot the frequency or plot both. The average percentage is calculated for each category (columns) on the total number of accounts (all classes combined). From the average percentage, we obtain for each category and for each row the difference between the percentage of the category in the class and the average percentage. The EPPM corresponds to the notion of independence deviation (between rows and columns, between categories and time classes) in a chi-square test approach. Although this approach is fundamental in statistical analysis, the independence deviations here are purely indicative and are not associated with a p_value that could determine the significance of the deviations.</p>
 <p><img src=\"GS/show.png\"></p>
 
 <h3 id=\"sort1\">Sort periods</h3>
-<p>The rows are initially in the order of appearance on the dendrogram. It must be possible to re-order
-the classes in a temporal way. In the interface you can drag and drop the row (green) to change the order.</p>
+<p>The rows are initially in the order of the data table. It is possible to reorder the rows in a temporal way. In the interface you can drag and drop the row (green) to change the order.</p>
 <p><img src=\"GS/sort.png\"></p>
 
 <h3 id=\"import\">Import your data</h3>
-<p>You can import your data. You have to upload a csv for the contingency table.</p>
+<p>You can import your data. You will need to upload a csv for the contingency table.</p>
 <p><img src=\"GS/import1.png\"></p>
 
-<p>The settings allow you to import diffrents data frame organization (Header, separator of column, ...).</p>
+<p>The settings allow you to import different data frame organisation (header, column separator, ...).</p>
 <h4 id=\"header\">Header</h4>
-<p>Yes or not option. Do you have headers on your colunms ?</p>
+<p>Yes or no option. Do you have headers on your columns?</p>
 <h4 id=\"rownames\">Rownames</h4>
-<p>Yes or not option. Do you have rownames on your rows ?</p>
+<p>Yes or no option. Do you have row names on your rows?</p>
 <h4 id=\"separator\">Separator</h4>
-<p>Choose the character use to separate the colunms.</p>
+<p>Select the character you want to use to separate the columns.</p>
 <h4 id=\"quote\">Quote</h4>
-<p>Choose the quote use to strings.</p>
+<p>Select the quotation marks to use on strings.</p>
 <h4 id=\"dec\">Decimal</h4>
-<p>Choose the character use to indicate decimal.</p>
+<p>Select the character to use to indicate the decimal point.</p>
 
 <h4 id=\"csv\">CSV Format and write.table</h4>
-<p>It is a data.frame with colunms separate by semicolon \";\".</p>
-<p>The input format for importing data is the \".csv\" format but also supports the\".txt\" format as a csv file.</p>
-<p>In R you can export your data frame into a csv file using write.csv2 or write.table.
-In a csv you can choose a character to separate the columns.
-In the same way, you can define the character to indicate the decimal point.</p>
+<p>It is a data.frame with colunms separated by semicolons \";\".</p>
+<p>The input format for importing data is the .csv format, but also supports the .txt format as a .csv file.</p>
+<p>In R, you can export your data frame to a csv file using write.csv2 or write.table. In a csv you can choose a character to separate the columns. In the same way, you can define the character to indicate the decimal point.</p>
 <code>
 write.table(data,file=\"path/to/name_file.csv\",sep=\";\",dec=\".\",row.names=FALSE,quote=FALSE)
 </code>
-<p>In Excel you can save as CSV format in order to import your data frame.</p>
-<p>The import interface allows you to setup this values with the \"header\",
-\"decimal\", \"separator\" and \"quote\" option.</p>
+<p>In Excel you can save in csv format in order to import your data frame.</p>
+<p>The import interface allows you to set these values using the 'header', 'decimal', 'separator' and 'quote' options.</p>
+
 
 
 

@@ -1,11 +1,11 @@
 \name{hclustcompro_subdivide}
 \alias{hclustcompro_subdivide}
 \title{
-subdivide a cluster after runing hclustcompro.
+Subdivide a cluster after running hclustcompro.
 }
 
 \description{
-Allow the user to subdivide one cluster into sub clusters. This function work only with 'hclustcompro_cl' object return by hclustcompro function.
+Allow the user to split one cluster into sub-clusters. This function only works with 'hclustcompro_cl' object returned by the hclustcompro function.
 }
 
 \usage{

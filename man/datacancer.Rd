@@ -5,7 +5,7 @@
 Data set of cancerology.
 }
 \description{
-Longitude, latitude, number of thyroid cancers. The data concern two departments of France (Loire Atlantique and Vendee) between 1998 and 2012. For reasons of confidentiality they are simulated data.
+Longitude, latitude, number of thyroid cancers. The data concern two French departments (Loire-Atlantique and Vendee) between 1998 and 2012. For confidentiality reasons, the data are simulated.
 }
 \author{
 M. Karakachoff (IR CHU - l'institut du Thorax INSERM UMR 1087 - CNRS UMR 6291) Nantes, France

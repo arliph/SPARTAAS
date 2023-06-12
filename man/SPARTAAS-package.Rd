@@ -6,8 +6,7 @@
 SPARTAAS
 }
 \description{
-\strong{S}tatistical \strong{Pa}ttern \strong{R}ecognition and da\strong{T}ing using \strong{A}rcheological \strong{A}rtefacts assemblage\strong{S}:
-hclustcompro(perioclust): compromised hierarchical agglomerative clustering method.
+\strong{S}tatistical \strong{Pa}ttern \strong{R}ecognition and da\strong{T}ing using \strong{A}rcheological \strong{A}rtefacts assemblage\strong{S}.
 }
 \details{
 \packageDescription{SPARTAAS}

@@ -1,13 +1,13 @@
 Package: SPARTAAS
 Type: Package
-Title: Statistical Methods for Archaeology
-Version: 1.1.0
-Authors@R: c(person("Lise","Bellanger", role = "aut",
+Title: Statistical Pattern Recognition and daTing using Archaeological Artefacts assemblageS
+Version: 1.2.1
+Authors@R: c(person("Arthur","Coulon", role = c("aut","cre"),
+                     email = "arthur-coulon@outlook.fr"),
+             person("Lise","Bellanger", role = "aut",
                      email = "lise.bellanger@univ-nantes.fr"),
              person("Philippe","Husi", role = "aut",
                      email = "philippe.husi@univ-tours.fr"),
-             person("Arthur","Coulon", role = c("aut","cre"),
-                     email = "arthur-coulon@outlook.fr"),
              person("Bruno","Desachy", role = "ctb"),
              person("Benjamin","Martineau", role = "ctb")
              )
@@ -15,17 +15,19 @@ Maintainer: Arthur Coulon <arthur-coulon@outlook.fr>
 URL: https://spartaas.gitpages.huma-num.fr/r-package/
 Description: Statistical pattern recognition and dating using archaeological artefacts assemblages.
     Package of statistical tools for archaeology.
-    hclustcompro(perioclust): Bellanger Lise, Coulon Arthur, Husi Philippe (2020, ISBN:978-3-030-60103-4).
+    hclustcompro(perioclust): Bellanger Lise, Coulon Arthur, Husi Philippe (2021, ISBN:978-3-030-60103-4).
     mapclust: Bellanger Lise, Coulon Arthur, Husi Philippe (2021) <doi:10.1016/j.jas.2021.105431>.
     seriograph: Desachy Bruno (2004) <doi:10.3406/pica.2004.2396>.
+    cerardat: Bellanger Lise, Husi Philippe (2012) <doi:10.1016/j.jas.2011.06.031>.
 License: GPL (>= 2)
-Encoding: UTF-8
+Encoding: UTF-8    
 LazyData: true
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 Imports: FactoMineR, grDevices,dplyr,tidyr,ggplot2,plotly,stringr,colorspace,crayon,
     shiny,shinydashboard,shinyjs,shinyjqui,fpc,ggdendro,htmltools,
-    rstudioapi,htmlwidgets,shinythemes,markdown,explor,shinyWidgets,scatterD3,
-    sp,ks,rgdal,foreign,maptools,grid,cluster,leaflet,ape,mapview
+    rstudioapi,htmlwidgets,shinythemes,explor,shinyWidgets,scatterD3,
+    sp,ks,foreign,grid,cluster,leaflet,ape,mapview,
+    MASS,ade4,lmtest,nor1mix,shinycssloaders,scales,fastcluster
 Suggests: knitr,
     rmarkdown
 RoxygenNote: 7.1.1

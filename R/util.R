@@ -97,8 +97,9 @@ plot_EPPM <- function(x,show,permute,col_Weight) {
   if(is.matrix(x)){x <- as.data.frame(x)}
   if(!is.data.frame(x)){stop("x is not a data frame.")}
   for (i in 1:length(x[1,])){
-    if(!(sum(x[,i]) == round(sum(x[,i])))){stop("The data frame must contains integers.")}
+    if(!(sum(x[,i]) == arrondi(sum(x[,i])))){stop("The data frame must contains integers.")}
   }
+  ens = 0
   .data <- c()
   Cluster <- c()
   labels <- factor(rownames(x),levels = rev(unique(rownames(x))))
@@ -190,7 +191,7 @@ plot_EPPM <- function(x,show,permute,col_Weight) {
   #ggplot
   p <- ggplot(data = data) +
     facet_grid( ~type, scales = "free", space = "free_x") +
-    geom_col(aes_string(x = "ens", y = "frequency", fill = "legend"), width = 1) +
+    geom_col(aes(x = ens, y = frequency, fill = legend), width = 1) +
     scale_x_discrete(labels = rev(rownames(x))) +
     coord_flip() +
     scale_fill_manual(values = color,
@@ -349,8 +350,8 @@ overlap_plot <- function(df,add=NULL,density = NULL, color = NULL, reorder_color
       ### On calcule un l'intervalle de confiance pour les dates des groupes et sous groupes
       intervalle_inf = intervalle_sup = {}
       for(i in unique(df$Cluster.)){
-        intervalle_inf[i] = round(quantile(df[df$Cluster. == i,]$Lower_bound,.10),0)
-        intervalle_sup[i] = round(quantile(df[df$Cluster. == i,]$Upper_bound,.90),0)
+        intervalle_inf[i] = arrondi(quantile(df[df$Cluster. == i,]$Lower_bound,.10),0)
+        intervalle_sup[i] = arrondi(quantile(df[df$Cluster. == i,]$Upper_bound,.90),0)
       }
 
       intersection_SG$borne_inf = intervalle_inf
@@ -599,7 +600,6 @@ overlap_plot <- function(df,add=NULL,density = NULL, color = NULL, reorder_color
           layout(shapes=c(a,b,l))
 
 
-
         plot <- subplot(
           p,q,nrows = 2, heights = c(0.7,0.3),shareX = TRUE, shareY = FALSE,titleY = TRUE
         ) %>%
@@ -683,8 +683,8 @@ overlap_plot <- function(df,add=NULL,density = NULL, color = NULL, reorder_color
   ### On calcule un intervalle de confiance pour les dates
   intervalle_inf = intervalle_sup = {}
   for(i in unique(df$Cluster)){
-    intervalle_inf[i] = round(quantile(df[df$Cluster == i,]$Lower_bound,.10),0)
-    intervalle_sup[i] = round(quantile(df[df$Cluster == i,]$Upper_bound,.90),0)
+    intervalle_inf[i] = arrondi(quantile(df[df$Cluster == i,]$Lower_bound,.10),0)
+    intervalle_sup[i] = arrondi(quantile(df[df$Cluster == i,]$Upper_bound,.90),0)
   }
 
   intersection$borne_inf = intervalle_inf
@@ -725,9 +725,6 @@ overlap_plot <- function(df,add=NULL,density = NULL, color = NULL, reorder_color
     }
     return(l)
   }
-
-
-
 
   #on définit les axes
   ay <- list(
@@ -908,116 +905,18 @@ overlap_plot <- function(df,add=NULL,density = NULL, color = NULL, reorder_color
                    class = c("temp_obj", "list")))
 }
 
-arrondi <- function (x, acc) {
-  if (!is.numeric(x)) {
-    stop("x must be numeric!")
+arrondi<-function (x, acc = 0)
+{
+  .local <- function(x, acc) {
+    x <- x * (10^acc)
+    ifelse(abs(x%%1 - 0.5) < .Machine$double.eps^0.5, ceiling(x)/(10^acc),
+           round(x)/(10^acc))
   }
-  res <- c()
-  if (acc <= 0) {
-    if (acc == 0) {
-      for (i in 1:length(x)) {
-        val <- x[i]
-        split <- str_split(as.character(val), fixed("."))
-        tmp_res <- round(val, acc)
-        before <- str_sub(split[[1]][2], acc + 1, acc + 1)
-        if (is.na(before)) {
-          before <- "0"
-        }
-        last <-
-          str_sub(split[[1]][1], nchar(split[[1]][1]), nchar(split[[1]][1]))
-        if (is.na(last)) {
-          last <- "0"
-        }
-        if (before == 5) {
-          splitres <- str_split(as.character(tmp_res), fixed("."))
-          last_rounded <-
-            str_sub(splitres[[1]][1], nchar(splitres[[1]][1]), nchar(splitres[[1]][1]))
-          if (is.na(last_rounded)) {
-            last_rounded <- "0"
-          }
-          if (last == last_rounded) {
-            if (val >= 0) {
-              tmp_res <- tmp_res + 1 * 10 ^ -acc
-            } else{
-              tmp_res <- tmp_res - 1 * 10 ^ -acc
-            }
-          }
-          res <- c(res, tmp_res)
-        } else{
-          res <- c(res, tmp_res)
-        }
-      }
-    } else{
-      for (i in 1:length(x)) {
-        val <- x[i]
-        split <- str_split(as.character(val), fixed("."))
-        tmp_res <- round(val, acc)
-        before <-
-          str_sub(split[[1]][1], nchar(split[[1]][1]) + acc + 1, nchar(split[[1]][1]) + acc + 1)
-        if (is.na(before)) {
-          before <- "0"
-        }
-        last <-
-          str_sub(split[[1]][1], nchar(split[[1]][1]) + acc, nchar(split[[1]][1]) + acc)
-        if (is.na(last)) {
-          last <- "0"
-        }
-        if (before == 5) {
-          splitres <- str_split(as.character(tmp_res), fixed("."))
-          last_rounded <-
-            str_sub(splitres[[1]][1],
-                    nchar(splitres[[1]][1]) + acc,
-                    nchar(splitres[[1]][1]) + acc)
-          if (is.na(last_rounded)) {
-            last_rounded <- "0"
-          }
-          if (last == last_rounded) {
-            if (val >= 0) {
-              tmp_res <- tmp_res + 1 * 10 ^ -acc
-            } else{
-              tmp_res <- tmp_res - 1 * 10 ^ -acc
-            }
-          }
-          res <- c(res, tmp_res)
-        } else{
-          res <- c(res, tmp_res)
-        }
-      }
-    }
-  } else{
-    for (i in 1:length(x)) {
-      val <- x[i]
-      split <- str_split(as.character(val), fixed("."))
-      tmp_res <- round(val, acc)
-      before <- str_sub(split[[1]][2], acc + 1, acc + 1)
-      if (is.na(before)) {
-        before <- "0"
-      }
-      last <- str_sub(split[[1]][2], acc, acc)
-      if (is.na(last)) {
-        last <- "0"
-      }
-      if (before == 5) {
-        splitres <- str_split(as.character(tmp_res), fixed("."))
-        last_rounded <- str_sub(splitres[[1]][2], acc, acc)
-        if (is.na(last_rounded)) {
-          last_rounded <- "0"
-        }
-        if (last == last_rounded) {
-          if (val >= 0) {
-            tmp_res <- tmp_res + 1 * 10 ^ -acc
-          } else{
-            tmp_res <- tmp_res - 1 * 10 ^ -acc
-          }
-        }
-        res <- c(res, tmp_res)
-      } else{
-        res <- c(res, tmp_res)
-      }
-    }
-  }
-  return(res)
+  if (is.data.frame(x))
+    return(data.frame(lapply(x, .local, acc)))
+  .local(x, acc)
 }
+
 
 Int2Alpha <- function(int){
   #====================================#
@@ -1151,4 +1050,3 @@ convert <- function(x){
   }
   return(res-100)
 }
-

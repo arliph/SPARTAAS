@@ -2,7 +2,7 @@
 \alias{hclust}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Hierarchical Clustering
+Hierarchical clustering of up to two datasets (Compromised clustering).
 }
 \description{
 Overload of \link[stats]{hclust} for dealing with two dissimilarities matrices.
@@ -30,7 +30,7 @@ The mixing parameter in order to generate the D_alpha matrix on which the classi
 }
 }
 \details{
-Data fusion (alpha optimal value parameter see \link[SPARTAAS]{hclustcompro_select_alpha}. It is necessary to define the appropriate proportion for each data source. This is the first sensitive point of the method that the user must consider. A tool is provided to guide his decision.
+Data fusion (parameter alpha: optimal value see \link[SPARTAAS]{hclustcompro_select_alpha}). It is necessary to define the appropriate proportion for each data source. This is the first sensitive point of the method that the user has to consider. A tool is provided to help him in his decision.
 }
 \value{
 \link[stats]{hclust}

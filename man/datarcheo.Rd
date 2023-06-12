@@ -5,7 +5,7 @@
 Data set of archeology
 }
 \description{
-Latitude, longitude, Absolute difference between two dating and the name of the archeological site. Data concern  archaeological contexts datation in West Central France based on a large collection of mediaval pottery finds. Two original statistical models are developed to estimate context dates using pottery. The  absolute difference is calculated for each context. Data are based on a collective research about medieval ceramic directed by P. Husi (\href{http://citeres.univ-tours.fr/spip.php?article493}{\code{"La céramique médiévale dans la vallée de la Loire moyenne"}}) and from archeo-statistical modelling project \href{http://citeres.univ-tours.fr/spip.php?article506#CeraR}{\code{CeraR}} (L. Bellanger & Ph. Husi).
+Latitude, longitude, absolute difference between two dates and the name of the archaeological site. The data concern the dating of archaeological contexts in West-central France based on a large collection of medieval pottery finds. Two original statistical models are developed to estimate context dates using pottery. The  absolute difference is calculated for each context. The data are based on a collective research on medieval pottery directed by P. Husi (\href{https://citeres.univ-tours.fr/spip45d1.html?article493}{\code{"La céramique médiévale dans la vallée de la Loire moyenne"}}).
 }
 \author{
 P. Husi IR CNRS, UMR CITERES-LAT, CNRS/Tours University, France :

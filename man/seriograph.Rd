@@ -14,20 +14,20 @@ seriograph(cont, order, insert, show, permute)
 
 \arguments{
   \item{cont}{
-    Contingency table or hclustcompro object. Note: Your contingency table must have the rows sorted in chronological order. (the order parameter allows you to change the order of the rows if necessary)
+    Contingency table or hclustcompro object. Note: Your contingency table must have the rows sorted in chronological order (the order parameter allows you to change the order of the rows if necessary).
 }
   \item{order}{
-     Vector for change the order of the rows (use row's names or cluster names if cont is a hclustcompro object, as a character vector). The oldest one (at the bottom) must be at the end of the vector. Missing names will not be ploted. You can remove row by simply remove the name in the vector.
+     Vector to change the order of the rows (use row names or cluster names if cont is a hclustcompro object, as a character vector). The oldest (at the bottom) must be at the end of the vector. Missing names are not plotted. You can remove a row by simply removing the name in the vector.
 }
   \item{show}{
-     The element to plot. This should be (an unambiguous abbreviation of) one of "both", "EPPM" or "frequency".
+     The element to be plotted. This should be (a unique abbreviation of) one of 'both', 'EPPM' or 'frequency'.
 }
   \item{permute}{
      Logical for permute columns in order to show seriation.
 }
 
   \item{insert}{
-     Vector with the position after where you want insert one or more Hiatus. Could be a list with two vector: position and label to print instead of hiatus. (see last examples)
+     Vector with the position after which you want to insert one or more hiatuses. Could be a list with two vectors: position and label to be printed instead of hiatus (see last examples).
 }
 }
 \details{

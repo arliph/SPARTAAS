@@ -4,10 +4,10 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
-Plot the timerange of observations sorted by cluster.
+Plot the time range of observations sorted by cluster.
 }
 \description{
-Vizualisation of cluster timerange.}
+Cluster time range visualisation.}
 \usage{
 timerange(
   data,
@@ -23,17 +23,17 @@ timerange(
 
 \arguments{
   \item{data}{
-data.frame (id, inf, sup) for each observation}
+data.frame containing the identifier, lower and upper bound (id, inf, sup) for each observation}
   \item{cluster}{
-vector number cluster of observations}
+vector containing the cluster number of each observation.}
   \item{add}{
-data.frame of information to display on hover.}
+data.frame containing the information to be displayed on hover.}
   \item{density}{
 vector of the density for each observation.}
   \item{color}{
-vector of the color. if you want the colors to correspond to something other than clusters. Character vector of the same length as the number of observations}
+vector of the colors for each observation (if you want the colors to correspond to something else than clusters). Character vector of the same length as the number of observations.}
   \item{reorder}{
-Logical for reorder the color. If TRUE, the first color is for the leftmost cluster on the graph. If FALSE, the first color is for cluster number 1, wherever it is..}
+Logical to rearrange the colors. If TRUE, the first color corresponds to the leftmost cluster on the plot. If FALSE, the first color is that of cluster number 1, wherever it is.}
 }
 
 \value{

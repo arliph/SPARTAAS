@@ -52,8 +52,8 @@ plot_EPPM <- function(x,show,permute,col_weight) {
   #data
   data <- as.data.frame(x)
   data <- mutate(data,ens = labels,rowsum = rowsum)
-  data <- gather(data,key = "type", value = "frequency",-.data$ens,-.data$rowsum, factor_key = TRUE)
-  data <- mutate(data,frequency = .data$frequency / .data$rowsum)
+  data <- gather(data,key = "type", value = "frequency",-ens,-rowsum, factor_key = TRUE)
+  data <- mutate(data,frequency = frequency / rowsum)
   #remove col rowsum
   data <- data[-2]
   data$frequency[is.na(data$frequency)] <- 0
@@ -64,19 +64,19 @@ plot_EPPM <- function(x,show,permute,col_weight) {
   ecart <- cbind(ecart,Weight=c(0))
   ecart[ecart < 0] <- 0
   ecart <- mutate(ecart,ens = labels)
-  ecart <- gather(ecart,key = "type", value = "EPPM", -.data$ens, factor_key = TRUE)
+  ecart <- gather(ecart,key = "type", value = "EPPM", -ens, factor_key = TRUE)
   ecart$EPPM[ecart$type == "Weight"] <- 0
 
   # Join data and EPPM
   data <- inner_join(data,ecart,by = c("ens", "type"))
-  data <- mutate(data,frequency = .data$frequency - .data$EPPM)
-  data <- gather(data,key = "legend", value = "frequency", -.data$ens,
-                 -.data$type, factor_key = TRUE)
+  data <- mutate(data,frequency = frequency - EPPM)
+  data <- gather(data,key = "legend", value = "frequency", -ens,
+                 -type, factor_key = TRUE)
   #if insert hiatus in df replace NA by 0 (NA are generating by divising by 0 (rowsum of a hiatus is 0))
   data[is.na(data)] <- 0
   #center (div /2 et copy for one part - and the other +)
   data <- rbind(data,data)
-  data <- mutate(data,frequency = .data$frequency * c(rep(.5, nrow(data)/2), rep(-.5, nrow(data)/2)))
+  data <- mutate(data,frequency = frequency * c(rep(.5, nrow(data)/2), rep(-.5, nrow(data)/2)))
 
   #color for Weight
   tmp <- data$frequency[data$type == "Weight"]
@@ -108,7 +108,7 @@ plot_EPPM <- function(x,show,permute,col_weight) {
   #ggplot
   p <- ggplot(data = data) +
     facet_grid( ~type, scales = "free", space = "free_x") +
-    geom_col(aes_string(x = "ens", y = "frequency", fill = "legend"), width = 1) +
+    geom_col(aes(x = ens, y = frequency, fill = legend), width = 1) +
     scale_x_discrete(labels = rev(rownames(x))) +
     coord_flip() +
     scale_fill_manual(values = color,

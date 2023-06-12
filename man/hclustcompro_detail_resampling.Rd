@@ -3,7 +3,7 @@
 \title{
 Resampling process in detail (one curve by set of clone).}
 \description{
-Base on a re-sampling process, we generate clone and we check for which alpha the clone and the original object are separeted on the dendrogram (see below). The function show each set of clone curve.}
+Based on a resampling process, we generate clone and we check the CorCrit_alpha. The function shows each set of clone curves.}
 \usage{
 hclustcompro_detail_resampling(D1, D2 = NULL, acc = 2, method = "ward.D2", iter = 5)
 }
@@ -100,17 +100,17 @@ text(1,-.7, expression(hat(alpha)^"*" == frac(1,n(n-1)) * sum(hat(alpha)^(c),c==
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
-library(SPARTAAS)
-data(datangkor)
+#library(SPARTAAS)
+#data(datangkor)
 
 #network stratigraphic data (Network)
-network <- datangkor$stratigraphy
+#network <- datangkor$stratigraphy
 
 #contingency table
-cont <- datangkor$contingency
+#cont <- datangkor$contingency
 
 \donttest{
-hclustcompro_detail_resampling(D1 = CAdist(cont, nPC="max"), D2 = adjacency(network))
+#hclustcompro_detail_resampling(D1 = CAdist(cont, nPC="max"), D2 = adjacency(network))
 }
 
 

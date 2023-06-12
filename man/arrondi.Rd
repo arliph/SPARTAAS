@@ -2,26 +2,23 @@
 \alias{arrondi}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Return the rounded value
+Returns the rounded value.
 }
 \description{
-Always returns the upper value when the next digit is 5.
+Always returns the upper value if the next digit is 5.
 }
 \usage{
 arrondi(x, acc)
 }
 \arguments{
   \item{x}{
-The number to round
+The number to round.
 }
   \item{acc}{
-The accuracy (number of digits)}
-}
-\details{
-Rounding to a negative number of digits means rounding to a power of ten, so for example arrondi(x, digits = -2) rounds to the nearest hundred.
+Accuracy (number of digits). A negative number of digits means rounding to the power of ten, e.g. arrondi(x, digits = -2) will round to the nearest hundred.}
 }
 \value{
-  \item{res }{value or vector of values rounded}
+  \item{res }{Value or vector of values rounded.}
 }
 
 \author{

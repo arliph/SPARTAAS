@@ -1,4 +1,4 @@
-# [SPARTAAS](https://spartaas.frama.io/r-package/index.html)
+# [SPARTAAS](https://spartaas.gitpages.huma-num.fr/r-package/index.html)
 Statistical pattern recognition and dating using archaeological artefacts assemblages
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SPARTAAS)](https://cran.r-project.org/package=SPARTAAS)

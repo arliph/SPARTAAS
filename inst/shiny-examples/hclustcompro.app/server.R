@@ -280,8 +280,8 @@ plot_EPPM <- function(x,show,permute,col_weight) {
   #data
   data <- as.data.frame(x)
   data <- mutate(data,ens = labels,rowsum = rowsum)
-  data <- gather(data,key = "type", value = "frequency",-.data$ens,-.data$rowsum, factor_key = TRUE)
-  data <- mutate(data,frequency = .data$frequency / .data$rowsum)
+  data <- gather(data,key = "type", value = "frequency",-ens,-rowsum, factor_key = TRUE)
+  data <- mutate(data,frequency = frequency / rowsum)
   #remove col rowsum
   data <- data[-2]
   data$frequency[is.na(data$frequency)] <- 0
@@ -292,19 +292,19 @@ plot_EPPM <- function(x,show,permute,col_weight) {
   ecart <- cbind(ecart,Weight=c(0))
   ecart[ecart < 0] <- 0
   ecart <- mutate(ecart,ens = labels)
-  ecart <- gather(ecart,key = "type", value = "EPPM", -.data$ens, factor_key = TRUE)
+  ecart <- gather(ecart,key = "type", value = "EPPM", -ens, factor_key = TRUE)
   ecart$EPPM[ecart$type == "Weight"] <- 0
 
   # Join data and EPPM
   data <- inner_join(data,ecart,by = c("ens", "type"))
-  data <- mutate(data,frequency = .data$frequency - .data$EPPM)
-  data <- gather(data,key = "legend", value = "frequency", -.data$ens,
-                 -.data$type, factor_key = TRUE)
+  data <- mutate(data,frequency = frequency - EPPM)
+  data <- gather(data,key = "legend", value = "frequency", -ens,
+                 -type, factor_key = TRUE)
   #if insert hiatus in df replace NA by 0 (NA are generating by divising by 0 (rowsum of a hiatus is 0))
   data[is.na(data)] <- 0
   #center (div /2 et copy for one part - and the other +)
   data <- rbind(data,data)
-  data <- mutate(data,frequency = .data$frequency * c(rep(.5, nrow(data)/2), rep(-.5, nrow(data)/2)))
+  data <- mutate(data,frequency = frequency * c(rep(.5, nrow(data)/2), rep(-.5, nrow(data)/2)))
 
   #color for Weight
   tmp <- data$frequency[data$type == "Weight"]
@@ -336,7 +336,7 @@ plot_EPPM <- function(x,show,permute,col_weight) {
   #ggplot
   p <- ggplot(data = data) +
     facet_grid( ~type, scales = "free", space = "free_x") +
-    geom_col(aes_string(x = "ens", y = "frequency", fill = "legend"), width = 1) +
+    geom_col(aes(x = ens, y = frequency, fill = legend), width = 1) +
     scale_x_discrete(labels = rev(rownames(x))) +
     coord_flip() +
     scale_fill_manual(values = color,
@@ -687,17 +687,17 @@ server <- function(input, output, session) {
                 h3("Select number of axis:",style="text-align:center;"),hr(style="border-color: #222222;"),
 
                 HTML('<p>Our first source of information is a contingency table. We need to construct a distance matrix from this table. We perform a correspondence analysis (CA) on the contingency table and then use the distances of the components (chi-square metric).</p>
-                     <p>You must choose the number of axes (CA components) to be used to construct the distance matrix.</p>
-                     <p>Examination of the eigenvalues makes it possible to determine the number of principal axes to be considered. The eigenvalues correspond to the amount of information retained by each axis.</p>
-                     <p>A heuristic method is often used: one constructs the graph of eigenvalues sorted in descending order and retains the eigenvalues (and associated principal components) that precede the first "elbow".</p>
-                     <p>Another approach is based on maintaining an approximation quality of the initial data, measured by the explained inertia rate (e.g. 85%). As many axes as necessary are chosen so that the sum of the corresponding eigenvalues exceeds the targeted inertia rate.</p>'),
+                     <p>It is necessary to choose the number of axes (CA components) to be used to construct the distance matrix.</p>
+                     <p>By examining the eigenvalues, it is possible to determine the number of principal axes to be considered. The eigenvalues correspond to the amount of information retained by each axis.</p>
+                     <p>A heuristic method is often used: one constructs the graph of eigenvalues sorted in descending order and retains the eigenvalues (and associated principal components) preceding the first "elbow".</p>
+                     <p>Another approach is based on maintaining an approximation quality of the original data, measured by the explained inertia rate (e.g. 85%). As many axes as necessary are chosen so that the sum of the corresponding eigenvalues exceeds the target inertia rate.</p>'),
                 footer = tagList(
                   actionButton("nextCA", "OK")
                 )
     )
   }
   selectaxis <- function() {
-    modalDialog(title="Select number of axis:",size=c("l"),
+    modalDialog(title="Select number of axes:",size=c("l"),
                 div(style="height:15px;"),
                 h3("Select number of axis:",style="text-align:center;"),hr(style="border-color: #222222;"),
 
@@ -1871,7 +1871,7 @@ server <- function(input, output, session) {
             for(alpha in alpha_seq){
               Mdist <- (alpha)*D1 + (1-alpha)*D2
               mixt.dist <- as.dist(Mdist)
-              tree <- stats::hclust(mixt.dist,method=method)
+              tree <- fastcluster::hclust(mixt.dist,method=method)
               new <- corCriterion(tree,D1,D2)
               dist.dend <- c(dist.dend,new)
             }
@@ -1966,6 +1966,10 @@ server <- function(input, output, session) {
       }
 
     }
+  })
+
+  output$formula <- renderUI({
+    withMathJax(paste0("$$ \\boldsymbol{D}_\\alpha=\\alpha \\boldsymbol{D}_1+(1-\\alpha) \\boldsymbol{D}_2 $$"))
   })
 
 

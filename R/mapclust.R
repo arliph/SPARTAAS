@@ -1,15 +1,6 @@
 # ClustCutMap!
 #
-# You can learn more about package authoring with RStudio at:
 #
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Build and Reload Package:  'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
 
 estimateDensityMulti <- function(data){
   cat("Estimation of multidimensionnal density ..")
@@ -117,7 +108,7 @@ spatialpatches2 <- function (x, y, z, w, Lim.D = 100, A.li = 0, modproj = NA, ml
       yg <- c(yg[!selna],NA)
       g[!is.element(g,n)] <- 0
     }
-    return(list(n=g,mat=cbind(n=n,xg=round(xg,2),yg=round(yg,2),zg=round(pb*100,2)),
+    return(list(n=g,mat=cbind(n=n,xg=arrondi(xg,2),yg=arrondi(yg,2),zg=arrondi(pb*100,2)),
                 InertiaWithin=InertiaWithin,
                 InertiaWithintot=sum(InertiaWithin),
                 InertiaBetween=inertiaTot - sum(InertiaWithin),
@@ -452,7 +443,7 @@ mapclust <-
     data=as.data.frame(data)
 
     if( bsup > max(dist(data[,1:2])) ) {
-      cat("The maximal value of dlim is: ",round(max(dist(data[,1:2])),2))
+      cat("The maximal value of dlim is: ",arrondi(max(dist(data[,1:2])),2))
       cat("the upper bound (bsup) have been changed in order to not run excessively high dlim.")
       bsup <- max(dist(data[,1:2]))
     }
@@ -467,7 +458,7 @@ mapclust <-
     cat(". Done\n")
     cat("Running Progress:\n")
     #creation barre de progression(pb)
-    pb <- txtProgressBar( min = 0, max = round((bsup - binf) / pas,0) , style = 3 )
+    pb <- txtProgressBar( min = 0, max = arrondi((bsup - binf) / pas,0) , style = 3 )
 
     pre_k <- 0
     k <- 1
@@ -479,7 +470,7 @@ mapclust <-
     Pch <- spatialpatches2(X , Y , Z , w = rep(1 , length(Y)) , Lim.D = dlim)
     grp1 <- Pch$n
 
-    names <- c(round(dlim,2))
+    names <- c(arrondi(dlim,2))
     historique <- cbind(historique,grp1)
 
     data$grp=grp
@@ -503,7 +494,7 @@ mapclust <-
         pre_k <- k
       }
 
-      if (round(dlim,2) > 0.01) {
+      if (arrondi(dlim,2) > 0.01) {
 
         nb_grp=length(unique(data$grp))
         if(nb_grp>1){
@@ -613,7 +604,7 @@ mapclust <-
 
         }
 
-        if(round(dlim,2) > 0){
+        if(arrondi(dlim,2) > 0){
           j <- length(historique[1,])
           #compare last and new compo
           v <- data$grp==historique[,j]
@@ -621,12 +612,12 @@ mapclust <-
           if(somme != 0){
             #if data$grp is different than the last compo hist
             #add the dlim to name and the hist
-            names <- c(names , round(dlim,2))
+            names <- c(names , arrondi(dlim,2))
             historique <- cbind(historique , data$grp)
           }else{
-            if(round(dlim,2) < names[length(names)]){
+            if(arrondi(dlim,2) < names[length(names)]){
               #IF no difference : replace the last dlim name by the new
-              names[length(names)] <- round(dlim,2)
+              names[length(names)] <- arrondi(dlim,2)
             }
           }
         }
@@ -643,7 +634,7 @@ mapclust <-
     dlim <- as.numeric(colnames(historique)[length(colnames(historique))])
 
     historique <- cbind(grp1,historique)
-    names <- c(round(bsup,2),names)
+    names <- c(arrondi(bsup,2),names)
     historique <- as.matrix(historique)
     colnames(historique) <- names
     res$dlim <- names
@@ -1104,9 +1095,9 @@ mapclust <-
       if(!multi){
         m <- m %>%
           addLegendCustom(colors = c("black", "black", "black"),
-                          labels = c(round(min(abs(Size)),2),
-                                     round(min(abs(Size)) + (max(abs(Size))-min(abs(Size)))/2  ,2),
-                                     round(max(abs(Size)),2)),
+                          labels = c(arrondi(min(abs(Size)),2),
+                                     arrondi(min(abs(Size)) + (max(abs(Size))-min(abs(Size)))/2  ,2),
+                                     arrondi(max(abs(Size)),2)),
                           sizes = c(10*(0.1+( min(abs(Size)) / max(abs(Size))))+5,
                                     10*(0.1+((min(abs(Size)) + (max(abs(Size))-min(abs(Size)))/2) /max(abs(Size))))+5,
                                     10*(0.1+( max(abs(Size)) / max(abs(Size))))+5),
@@ -1177,7 +1168,7 @@ mapclust <-
 call: ")
     print(out$call)
     cat(sep = "","\npartition:
-      number of cluster: ",length(unique(out$cluster)),"\n      Average_Sil = ",round(mean(out$silhouetteData[,3]),2),", WSS = ",round(sum(out$InertiaWithin[[which(out$dlim == out$cutdlim)]]),2),", cutdlim = ",out$cutdlim,
+      number of cluster: ",length(unique(out$cluster)),"\n      Average_Sil = ",arrondi(mean(out$silhouetteData[,3]),2),", WSS = ",arrondi(sum(out$InertiaWithin[[which(out$dlim == out$cutdlim)]]),2),", cutdlim = ",out$cutdlim,
         "\nplot:
       .. $dendrogram      The global dendrogramm
       .. $cuttree         The cut dendrogramm
@@ -1224,7 +1215,7 @@ print.mapclust_cl <- function(x, ...){
 call: ")
   print(x$call)
   cat(sep = "","\npartition:
-      number of cluster: ",length(unique(x$cluster)),"\n      Average_Sil = ",round(mean(x$silhouetteData[,3]),2),", WSS = ",round(sum(x$InertiaWithin[[which(x$dlim == x$cutdlim)]]),2),", cutdlim = ",x$cutdlim,
+      number of cluster: ",length(unique(x$cluster)),"\n      Average_Sil = ",arrondi(mean(x$silhouetteData[,3]),2),", WSS = ",arrondi(sum(x$InertiaWithin[[which(x$dlim == x$cutdlim)]]),2),", cutdlim = ",x$cutdlim,
       "\nplot:
       .. $dendrogram      The global dendrogramm
       .. $cuttree         The cut dendrogramm
@@ -1313,7 +1304,7 @@ documentation: \n> ?mapclust
   #===================================================================================
   lonlat <- classification$lonlat
   if(!is.na(dlim) && !is.na(nb_grp)){
-    if(nb_grp - round(nb_grp) == 0){
+    if(nb_grp - arrondi(nb_grp) == 0){
       message("you have entered both parameters.")
       message("The parameter dlim will be ignore!")
       dlim <- NA
@@ -1323,7 +1314,7 @@ documentation: \n> ?mapclust
       nb_grp <- NA
     }
   }
-  if(!nb_grp - round(nb_grp) == 0 && is.na(dlim)){
+  if(!nb_grp - arrondi(nb_grp) == 0 && is.na(dlim)){
     dlim <- nb_grp
     nb_grp <- NA
     message("you have entered a non-integer group number: ",dlim,". We consider this value as a dlim.")
@@ -1461,9 +1452,9 @@ documentation: \n> ?mapclust
     if(!multi){
       m <- m %>%
         addLegendCustom(colors = c("black", "black", "black"),
-                        labels = c(round(min(abs(Size)),2),
-                                   round(min(abs(Size)) + (max(abs(Size))-min(abs(Size)))/2  ,2),
-                                   round(max(abs(Size)),2)),
+                        labels = c(arrondi(min(abs(Size)),2),
+                                   arrondi(min(abs(Size)) + (max(abs(Size))-min(abs(Size)))/2  ,2),
+                                   arrondi(max(abs(Size)),2)),
                         sizes = c(10*(0.1+( min(abs(Size)) / max(abs(Size))))+5,
                                   10*(0.1+((min(abs(Size)) + (max(abs(Size))-min(abs(Size)))/2) /max(abs(Size))))+5,
                                   10*(0.1+( max(abs(Size)) / max(abs(Size))))+5),
@@ -1550,7 +1541,7 @@ documentation: \n> ?mapclust
 call: ")
     print(out$call)
     cat(sep = "","\npartition:
-      number of cluster: ",length(unique(out$cluster)),"\n      Average_Sil = ",round(mean(out$silhouetteData[,3]),2),", WSS = ",round(sum(out$InertiaWithin[[which(out$dlim == out$cutdlim)]]),2),", cutdlim = ",out$cutdlim,
+      number of cluster: ",length(unique(out$cluster)),"\n      Average_Sil = ",arrondi(mean(out$silhouetteData[,3]),2),", WSS = ",arrondi(sum(out$InertiaWithin[[which(out$dlim == out$cutdlim)]]),2),", cutdlim = ",out$cutdlim,
         "\nplot:
       .. $dendrogram      The global dendrogramm
       .. $cuttree         The cut dendrogramm
@@ -1623,11 +1614,11 @@ summary.mapclust_cl <- function(object, ...){
     cat(" ",dlim,"\t")
     cat(" ",number_grp,"\t")
 
-    cat(round(WSS,2),"\t")
-    cat(round(sil,2),"\t")
+    cat(arrondi(WSS,2),"\t")
+    cat(arrondi(sil,2),"\t")
     aste <- FALSE
     if(dim(as.data.frame(object$var))[2] == 1){
-      cat(round(Moran,2))
+      cat(arrondi(Moran,2))
       if(anyNA(object$Moran[[i]][1,]) == TRUE){
         nbTOT <- length(object$Moran[[i]][1,])
         nbNA <- length(is.na(object$Moran[[i]][1,])[is.na(object$Moran[[i]][1,])==TRUE])
@@ -1662,24 +1653,24 @@ summary.mapclust_cl <- function(object, ...){
   }
   cat("\nX_mean:\t\t")
   for(y in 1:nb){
-    cat(round(X_mean[y],2),"\t")
+    cat(arrondi(X_mean[y],2),"\t")
   }
   cat("\nY_mean:\t\t")
   for(y in 1:nb){
-    cat(round(Y_mean[y],2),"\t")
+    cat(arrondi(Y_mean[y],2),"\t")
   }
   if(dim(as.data.frame(object$var))[2] == 1){
     var_mean <- tapply(object$var,object$cluster,mean)
     cat("\nvar_mean:\t")
     for(y in 1:nb){
-      cat(round(var_mean[y],2),"\t")
+      cat(arrondi(var_mean[y],2),"\t")
     }
   }else{
     for(i in 1:dim(as.data.frame(object$var))[2]){
       var_mean <- tapply(object$var[,i],object$cluster,mean)
       cat("\nvar",i,"_mean:\t",sep="")
       for(y in 1:nb){
-        cat(round(var_mean[y],2),"\t")
+        cat(arrondi(var_mean[y],2),"\t")
       }
     }
   }

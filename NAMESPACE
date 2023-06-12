@@ -1,25 +1,34 @@
-export("hclustcompro_app","CAdist","adjacency","hclustcompro_select_alpha","arrondi","hclustcompro_subdivide",
-       "seriograph","hclustcompro_detail_resampling","overlap",
-       "timerange","hclustcompro","hclust","perioclust","mapclust","mapclust_cut_tree","mapclust_app","serio_app")
+export("hclustcompro_app","CAdist","adjacency","hclustcompro_select_alpha","arrondi",
+       "hclustcompro_subdivide","seriograph","overlap",
+       "cerardat","extract_results","cerardat_estim_nf","timerange",
+       "hclustcompro","hclust","perioclust","mapclust","mapclust_cut_tree",
+       "mapclust_app","serio_app","cerardat_app")
 
 importFrom("FactoMineR",      "CA")
-importFrom("grDevices",       "colorRampPalette","recordPlot","rainbow")
+importFrom("grDevices",       "colorRampPalette","recordPlot","rainbow","graphics.off","tiff","rgb")
 importFrom("tidyr",           "gather")
 importFrom("dplyr",           "mutate","group_by","summarise_all","funs","ungroup","inner_join","arrange",
                               "summarise","first","last","filter")
-importFrom("ggplot2",         "ggplot","geom_bar","geom_col","aes_string","aes","ggtitle","labs","xlab",
+importFrom("ggplot2",         "ggplot","geom_bar","geom_col","aes","ggtitle","labs","xlab",
                               "ylab","facet_wrap","position_stack","coord_flip","facet_grid","scale_fill_manual",
                               "scale_y_continuous","theme","element_text","element_blank","scale_x_discrete",
                               "geom_segment","margin","geom_point","scale_colour_gradientn","geom_line",
-                              "scale_x_continuous","geom_text","scale_y_reverse","ylim","element_line","geom_hline")
+                              "scale_x_continuous","geom_text","scale_y_reverse","ylim","element_line",
+                              "geom_hline","geom_errorbar","theme_classic","geom_vline","scale_y_log10",
+                              "annotation_logticks")
 importFrom("ggdendro",        "dendro_data","ggdendrogram","segment","label")
 importFrom("plotly",          "plot_ly","add_lines","add_segments","add_markers","layout","subplot")
 importFrom("graphics",        "barplot","plot","abline","legend","lines","points","text","mtext",
-                              "axis","boxplot","image","par","plot.new", "segments", "symbols")
+                              "axis","boxplot","image","par","plot.new", "segments", "symbols","polygon")
 importFrom("stats",           "median","quantile","cophenetic","cor","dist","as.dist","chisq.test","cutree",
-                              "optimize","hclust","rect.hclust","reorder","coef","sd","lm","qnorm","na.omit",
-                              "approx","density")
-importFrom("utils",           "setTxtProgressBar","txtProgressBar","data","str")
+                              "optimize","rect.hclust","reorder","coef","sd","lm","qnorm","na.omit",
+                              "approx","density","predict","rstudent","shapiro.test","as.hclust","as.formula",
+                              "formula","residuals","lm.influence")
+importFrom("nor1mix",         "qnorMix","norMix","dnorMixL")
+importFrom("lmtest",          "dwtest","bptest")
+importFrom("MASS",            "stepAIC","boxcox")
+importFrom("ade4",            "supcol","dudi.coa","inertia.dudi")
+importFrom("utils",           "setTxtProgressBar","txtProgressBar","data","str","capture.output","head")
 importFrom("stringr",         'str_sub','str_split','fixed','str_extract')
 importFrom("colorspace",      "rainbow_hcl")
 importFrom("crayon",          "blue")
@@ -30,15 +39,22 @@ importFrom("sp",              "CRS","coordinates<-","proj4string<-")
 importFrom("ks",              "kde","Hscv")
 importFrom("cluster",         "silhouette")
 importFrom("htmltools",       "htmlEscape")
-importFrom("stats",           "as.hclust")
-import("shinyjs",             except=c("runExample","alert"))
-import('maptools',            except=c("label"))
+importFrom("shinycssloaders", "withSpinner")
+importFrom("fastcluster",     "hclust")
+importFrom("scales",          "scientific")
 
-import('foreign','grid','shiny','leaflet','rgdal','rstudioapi','ape','htmlwidgets','shinythemes','markdown')
-import("shinyWidgets","scatterD3","explor","mapview")
+import("shinyjs",             except=c("runExample","alert"))
+
+
+import('foreign','grid','shiny','leaflet','rstudioapi','ape',
+       'htmlwidgets','shinythemes',"shinyWidgets","scatterD3",
+       "explor","mapview")
 
 S3method("print",     "hclustcompro_cl")
 S3method("print",     "selectAlpha_obj")
 S3method("print",     "seriograph")
 S3method("summary",   "selectAlpha_obj")
+S3method("print",     "cerardat_obj")
+S3method("plot",      "cerardat_obj")
+
 

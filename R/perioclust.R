@@ -58,6 +58,7 @@ CAdist <- function(df, nPC = NULL, graph = TRUE){
   }
   df.CA <- FactoMineR::CA(df, ncp = nPC, graph = graph)
   dist <- dist(df.CA$row$coord) / max(dist(df.CA$row$coord))
+  #dist <- dist(scale(df.CA$row$coord)) / max(dist(scale(df.CA$row$coord)))
   return(D=as.matrix(dist))
 }
 
@@ -173,12 +174,12 @@ perioclust <- hclustcompro <- function(D1,D2,alpha = "EstimateAlphaForMe",k = NU
   # Last update : 23 october 2018
   #
   # Arguments:
-  # D1	      The fisrt distance matrix. Archeological context: Stratigraphic or timerange distance.
-  # D2	      The second distance matrix. Archeological context: ceramic distance.
-  # alpha	    The mixing parameter
-  # k         The number of clusters
-  # title	    The title to print on the dendrogram. (optionnal)
-  # method    The method to use in hclust (see doc)
+  # D1	       The fisrt distance matrix. Archeological context: Stratigraphic or timerange distance.
+  # D2	       The second distance matrix. Archeological context: ceramic distance.
+  # alpha	     The mixing parameter
+  # k          The number of clusters
+  # title	     The title to print on the dendrogram. (optionnal)
+  # method     The method to use in hclust (see doc)
   # suppl_plot Logical for plot the WSS and average sil plot.
   #
   #===============================================================================
@@ -1021,7 +1022,7 @@ hclustcompro_detail_resampling <- function(D1, D2 = NULL, acc = 2, method = "war
       for(alpha in alpha_seq){
         Mdist <- (alpha) * D1 + (1-alpha) * D2
         mixt.dist <- as.dist(Mdist)
-        tree <- stats::hclust(mixt.dist,method=method)
+        tree <- fastcluster::hclust(mixt.dist,method=method)
         new <- corCriterion(tree,D1,D2)
         dist.dend <- c(dist.dend,new)
       }
@@ -1124,7 +1125,7 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
     for (elt in alpha){
       Mdist <- (elt)*D1 + (1-elt)*D2
       mixt.dist <- as.dist(Mdist)
-      tree <- stats::hclust(mixt.dist,method=method)
+      tree <- fastcluster::hclust(mixt.dist,method=method)
       d2 <- stats::cophenetic(tree)
       res <- c(res,abs(cor(as.dist(D1),d2) - cor(as.dist(D2),d2)))
     }
@@ -1137,7 +1138,7 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
     for (elt in alpha){
       Mdist <- (elt)*D1 + (1-elt)*D2
       mixt.dist <- as.dist(Mdist)
-      tree <- stats::hclust(mixt.dist,method=method)
+      tree <- fastcluster::hclust(mixt.dist,method=method)
       d2 <- stats::cophenetic(tree)
       c1 <- c(c1, cor(as.dist(D1),d2))
       c2 <- c(c2, cor(as.dist(D2),d2))
@@ -1154,7 +1155,7 @@ hclustcompro_select_alpha <- function(D1,D2,acc = 2, resampling = TRUE, method =
     for (elt in alpha){
       Mdist <- (elt)*D1bis + (1-elt)*D2bis
       mixt.dist <- as.dist(Mdist)
-      tree <- stats::hclust(mixt.dist,method=method)
+      tree <- fastcluster::hclust(mixt.dist,method=method)
       d2 <- stats::cophenetic(tree)
       res <- c(res,abs(cor(as.dist(D1bis),d2) - cor(as.dist(D2bis),d2)))
     }
@@ -1672,5 +1673,5 @@ hclust <- function(d, method = "complete", members = NULL, d2 = NULL, alpha = NU
     }
     d <- as.dist(alpha * d + (1 - alpha) * d2)
   }
-  stats::hclust(d, method, members)
+  fastcluster::hclust(d, method, members)
 }

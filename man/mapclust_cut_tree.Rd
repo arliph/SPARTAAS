@@ -6,7 +6,7 @@
 Function to cut the dendrogram for a new height (distance limit) or a new number of clusters and map the new partition
 }
 \description{
-The function returns the new map, one dendrogram with the cutting line, the silhouette width and the new vector cluster. You must run \link[SPARTAAS]{mapclust} beforehand to have a \code{mapclust_cl} object that can be used by mapclust_cut_tree.
+The function returns the new map, one dendrogram with the cut line, the silhouette width and the new vector cluster. You must call \link[SPARTAAS]{mapclust} beforehand to get a \code{mapclust_cl} object that can be used by mapclust_cut_tree.
 
 }
 \usage{
@@ -17,10 +17,10 @@ mapclust_cut_tree(classification, nb_grp = NA, dlim = NA)
 The object return by mapclust  \code{Class: mapclust_cl}
 }
   \item{nb_grp}{
-The number of groups you want on the partition. Must be integer. (don't use dlim in this case)
+The number of groups you want to have on the partition. Must be an integer. (don't use dlim in this case)
 }
   \item{dlim}{
-The value of dlim where you want to cut the dendrogram. You can enter wathever you want (numeric value) and the function select for you the nearest lower dlim with the same partition. (don't use nb_grp in this case)
+The value of dlim at which you wish to cut the dendrogram. You can enter any value (numerical) and the function will select the nearest lower dlim with the same partition. (do not use nb_grp in this case).
 }
 }
 
@@ -36,22 +36,22 @@ the function returns a list.
 \item{WSSPlot}{The Within Sum of Square plot (for each partition)}
 \item{silhouette}{The silhouette plot of the selected partition}
 \strong{Value:}
-\item{X}{The x-coordinates data you used}
-\item{Y}{The y-coordinates data you used}
-\item{var}{The regionalized variable.s data you used}
-\item{label}{The label vector you used}
-\item{density}{The estimate density based on var. Equal to var if you used a unidimensionnal density variable}
-\item{cluster}{The vector of cluster of the selected partition}
-\item{Plabel}{Logical parameter for activate or not the print of labels on the dendrogram}
-\item{fullhist}{The composition cluster for each observation}
-\item{hist}{The composition cluster without duplicates (matches to leaf of the dendrogram)}
+\item{X}{The x-coordinate data you have used}
+\item{Y}{The y-coordinate data you have used}
+\item{var}{The regionalised variable data you have used}
+\item{label}{The label vector you have used}
+\item{density}{The estimated density based on var. Equal to var if you used a unidimensional density variable}
+\item{cluster}{The cluster vector of the selected partition}
+\item{Plabel}{Logical parameter to activate or not the printing of labels on the dendrogram}
+\item{fullhist}{The compositional cluster for each observation}
+\item{hist}{The compositional cluster without duplicates (corresponds to the split on the dendogram)}
 \item{dlim}{The vector of the different limit distances}
 \item{cutdlim}{The select dlim for the cut of the current partition}
-\item{DiMatrix}{The matrix of Weighted Euclidiean distances}
+\item{DiMatrix}{The weighted euclidean distance matrix}
 \item{silhouetteData}{The silhouette data of the selected partition}
 \item{AveSilData}{The average silhouette value for each partition}
-\item{Moran}{The Moran index for each groups for each partitions}
-\item{lonlat}{Logical parameter if your coordinates are in longitude latitude format or not.}
+\item{Moran}{The Moran index for each group for each partition}
+\item{lonlat}{Logical parameter, whether your coordinates are in latitude-longitude format or not}
 }
 
 \author{

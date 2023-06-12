@@ -4,17 +4,17 @@
 Temporal overlap index
 }
 \description{
-The overlap index is the ratio between internal overlap and total overlap over time. We define the total overlap limit as follows: the minimum of the lower limits of the pair of individuals and the maximum of the upper limits. We define the limit of the internal overlap as follows: the maximum of the lower limits and the minimum of the upper limits.
+The overlap index is the ratio between internal overlap and total overlap over time. We define the limit of total overlap as: the minimum of the lower limits of the pair of individuals and the maximum of the upper limits. We define the internal overlap limit as the maximum of the lower limits and the minimum of the upper limits.
 }
 
 \details{
-The lower and upper limits must be number.
+The lower and upper limits must be numeric.
 
-The dissimilarity between time ranges is calculated from the ratio of the Overlap of the time ranges (Distance in the case where the two ranges are disjoint) by the cumulative extent of the two.
+The dissimilarity between time periods is calculated as the ratio of the overlap of the time periods (distance in the case of disjoint time periods) to the cumulative extent of the two time periods.
 
 As the ratio is bounded between -1 and 1, we add 1 to make it positive and normalise it so that it is between 0 and 1.
 
-This overlap index must then be transformed into a dissimilarity index between sets. We do 1 - ratio to do this. It is equal to 0 if the two time ranges are identical and 1 when they are infinitely distant.
+This overlap index then needs to be transformed into a dissimilarity index between sets. To do this we use the 1 - ratio. It is equal to 0 if the two time periods are identical and 1 if they are infinitely different.
 }
 \usage{
 overlap(temporal)

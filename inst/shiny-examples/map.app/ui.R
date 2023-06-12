@@ -19,6 +19,7 @@ load(file = "./data/datacancer.RData")
 #----------------------------------------------------------------------------------------------#
 ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("flatly"),
                 tags$head(
+                  tags$link(rel = "icon", type = "image/gif", href = "https://spartaas.gitpages.huma-num.fr/r-package/img/lambda.png"),
                   tags$title("mapclust")
                 ),
                 tags$head(tags$style(
@@ -41,7 +42,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                               top = 0, left = 0, right = 0,
                               fixed = TRUE,
                               titlePanel(h2("Divisive Hierarchical Clustering using Spatials Patches")),
-                              div(span(strong("SPARTAAS | MapClust ")),span("v1.0 ",style ="font-size:14px;"))
+                              div(span(strong("SPARTAAS | mapclust ")))
                 ),
                 #footer
                 absolutePanel(style="z-index: 2000;padding: 0px; border-bottom: 0px solid #CCC; background: #fff;opacity: 1;",
@@ -70,8 +71,8 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                       sidebarPanel(style="border-width:0px;border-color:#222222;",
                                                    h1("R Package:"),
                                                    br(),
-                                                   HTML("<p>This method is part of the <a href='https://spartaas.gitpages.huma-num.fr/r-package/index.html'>SPARTAAS</a> package.</p>
-                                                        <p>If you are interested you can install our R package avaible on the <a href='https://cran.r-project.org/package=SPARTAAS'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS'>GitHub</a>.</p>
+                                                   HTML("<p>This method is part of the <a target='_blank' href='https://spartaas.gitpages.huma-num.fr/r-package/index.html'>SPARTAAS</a> package.</p>
+                                                        <p>If you are interested you can install our R package available on the <a target='_blank' href='https://cran.r-project.org/package=SPARTAAS'>CRAN</a> and on <a target='_blank' href='https://github.com/arliph/SPARTAAS'>GitHub</a>.</p>
 
                                                         ")
 
@@ -113,7 +114,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                                          choices = list("datarcheo" = 1, "datacancer" = 2, "your data" = 3),
                                                                          selected = 1),
                                                              checkboxInput("Plabel","Print the list of names on the dendrogram.", value = FALSE),
-                                                             checkboxInput("extenddend","Merge the leaves located at the same level on the dendrogram (activate before running the method: play button).", value = FALSE),
+                                                             checkboxInput("extenddend","Merge the leaves on the same level of the dendogram (activate before running the method: play button).", value = FALSE),
                                                              hr(style="border-color: #222222;"),
                                                              fluidRow(
                                                                column(width = 3,
@@ -245,68 +246,69 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
 <h2 id=\"data\">The App</h2>
 <hr>
 <h3 id=\"first\">Run (first time)</h3>
-<p>The function therefore requires as data geographical coordinates, longitude and latitude (<code>coord</code>) and the variable(s) of interest (<code>var</code>) in the same table.</p>
-<p>For your first time you can use our dataset. The first one it's call datarcheo. Just select it on the MapClust tab(it will be select by default) and run. You also can try datacancer the other dataset.</p>
+<p>The function therefore requires as data geographical coordinates, latitude and longitude (<code>coord</code>) and the variable(s) of interest (<code>var</code>) in the same table.</p>
+<p>For your first use, you can use our dataset. The first one is call datarcheo. Just select it in the MapClust tab (it will be selected by default) and run. You can also try the other dataset datacancer.</p>
 <h3 id=\"plabel\">Print label option</h3>
-<p>Placed just under the choice of the dataset, it is used to define if the labels should be displayed on the dendrogram.</p>
+<p>Located just below the dataset selection, it is used to define whether or not to display the labels on the dendrogram.</p>
 <p><img src=\"GS/Plabel.png\">Select dataset and print label option</p>
 <h3 id=\"import\">Import your data</h3>
-<p>You can import your data. Since they may contain only one or more variables of interest, you must adjust the parameters.</p>
-<p>Let's take a look of the interface. There are three main parts. The import space with only one import button. The second part is more complex with more options. This is the parameter part where you must configure the import tool according to your data. Finally, there is the preview area where you can see how your data should look and how your data is. There is still something left, the concordance indicator that allows you to quickly check if your data matches what it should look like.</p>
+<p>You can import your data. As they may contain only one or more variables of interest, you will need to adjust the parameters.</p>
+<p>Let's have a look at the interface. There are three main parts. The import area with only one import button. The second part is more complex and has more options. This is the parameter section, where you need to configure the import tool according to your data. Finally, there is the preview area where you can see how your data should look and how your data is. There is still something left, the concordance indicator, which allows you to quickly check if your data matches what it should look like.</p>
 <p><img src=\"GS/import.png\"></p>
 <h4 id=\"csv\">CSV Format and write.table</h4>
-<p><img src=\"GS/csv.png\"><br>A csv file. It is a data.frame with 3 colunms with headers and separate by semicolon \";\".</p>
-<p>The input format for importing data is the \".csv\" format but also supports the\".txt\" format as a csv file.</p>
-<p>In R you can export your data frame into a csv file using write.csv2 or write.table. In a csv you can choose a character to separate the columns. In the same way, you can define the character to indicate the decimal point.</p>
+<p><img src=\"GS/csv.png\"><br>A csv file.</p>
+<p>It is a data.frame of 3 columns with headers separated by semicolons \";\".</p>
+<p>The input format for importing data is the .csv format, but also supports the .txt format as a .csv file.</p>
+<p>In R, you can export your data frame to a csv file using write.csv2 or write.table. In a csv you can choose a character to separate the columns. In the same way, you can define the character to indicate the decimal point.</p>
 <code>
 write.table(data,file=\"path/to/name_file.csv\",sep=\";\",dec=\".\",row.names=FALSE,quote=FALSE)
 </code>
-<p>In Excel you can save as CSV format in order to import your data frame.</p>
-<p>The import interface allows you to setup this values with the \"header\", \"decimal\", \"separator\" and \"quote\" option.</p>
-<p>In order to compute exactly as you want we need to know some things. The first one is the presence or not of label in your data. The label have to be in the last colunm. We also need to know how many of variable of interest you have in addition of the two coordinates variables.</p>
-<p>If the setup don't match with your real data frame you will not be able to import anything. You have to change the data or the parameters. When it was good a green check icon will appear if not you will see a red cross.</p>
-<p><img src=\"GS/importsetting.png\"></p>
+<p>In Excel you can save in csv format in order to import your data frame.</p>
+<p>The import interface allows you to set these values using the 'header', 'decimal', 'separator' and 'quote' options.</p>
+<p>To calculate exactly as you want, we need to know a few things. The first is the presence or absence of labels in your data. The label must be in the last column. We also need to know how many variables of interest you have in addition to the two coordinate variables.</p>
+<p>If the setup doesn't match your real data frame, you can't import anything. You will have to change the data or parameters. If it was good you will see a green tick, if not you will see a red cross.</p>
+
 <h4 id=\"label\">Label</h4>
-<p>Yes or not option. Do you have labels in your data ? If you have labels you have to put them on the last colunms.</p>
+<p>Yes or no option. Do you have labels in your data ? If you have labels, put them in the last colunm.</p>
 <h4 id=\"header\">Header</h4>
-<p>Yes or not option. Do you have headers on your colunms ?</p>
+<p>Yes or no option. Do you have headers on your colunms?</p>
 <h4 id=\"separator\">Separator</h4>
-<p>Choose the character use to separate the colunms.</p>
+<p>Select the character you want to use to separate the colunms.</p>
 <h4 id=\"quote\">Quote</h4>
-<p>Choose the quote use to strings.</p>
+<p>Select the quotation marks to use on strings.</p>
 <h4 id=\"dec\">Decimal</h4>
-<p>Choose the character use to indicate decimal.</p>
+<p>Select the character to use to indicate the decimal point.</p>
 <h4 id=\"uni\">Univariate data</h4>
-<p>Put the slider to \"Univariate\" then import your data. If you have labels let the option check, if not uncheck label.</p>
-<p>Configure all settings for the csv format. Which symbol is used to separate the columns, which decimal symbol, which quotation marks to use for the character string and whether your columns contain a header.</p>
+<p>Move the slider to 'Univariate' and import your data. If you have labels, check the option, if not, uncheck Label.</p>
+<p>Configure all the settings for the csv format. Which symbol to use to separate the columns, which decimal symbol to use, which quotes to use for the string, and whether to include a header in your columns.</p>
 <p><img src=\"GS/importUni.png\"></p>
 <h4 id=\"multi\">Multivariate data</h4>
-<p>The only différence is that you have to put the slider on \"Multivariate\". When you do this, you hace acces to another slider. You have to indicate the number of variables of interest. Warning: You must not count the two coordinates variables in.</p>
+<p>The only difference is that you have to set the slider to 'Multivariate'. When you do this, you have access to another slider. You must specify the number of variables of interest. Warning: You must not include the two coordinate variables.</p>
 <p><img src=\"GS/importMulti.png\"></p>
 
 
 <hr>
 <h2 id=\"eval\">Evaluation Plot</h2>
 <hr>
-<p>It is essential to be able to evaluate the different partitions of the hierarchy in order to identify the one(s) that is (are) most relevant. The number k of classes of the partition to be retained is based in our case on several indicators calculated for different values of K : the total within-class sum of square (<code>WSS</code>) and the global average of the silhouette widths.</p>
-<p>During the execution of the MapClust method you have to make a choice. You have to cut the dendrogram. This operation select the partition. In order to compare all the possibilities you can see the evaluation plot (WSSPlot and AveSilPlot). This two plot evaluate the relative good quality of the partition.</p>
+<p>It is essential to be able to evaluate the different partitions of the hierarchy in order to identify the most relevant one(s). In our case, the number k of classes in the partition to be retained is based on several indicators calculated for different values of K: the total within-class sum of squares (WSS) and the global average of silhouette widths.</p>
+<p>When running the mapclust method, you have to make a choice. You must cut the dendrogram. This operation selects the partition. To compare all the possibilities, you can see the evaluation plots (WSSPlot and AveSilPlot). These two plots evaluate the relative quality of the partition.</p>
 <h3 id=\"wssplot\">Within Sum of Square Plot (WSSPlot)</h3>
-<p>This is the plot of within-groups sum of squares against number of clusters. The Within Sum of Square decrease when the number of cluster increase. In this plot the best partition is when add one or more clusters don’t decrease the WSS value. It’s call the Elbow method.</p>
+<p>This is the plot of the within group sum of squares against the number of clusters. The within group sum of squares decreases as the number of clusters increases. In this plot, the best partition is when adding one or more clusters doesn't decrease the WSS value. It's called the elbow method.</p>
 <h4>Example:</h4>
 <p><img style=\"width:600px;\" src=\"GS/WSS2.png\"></p>
-<p>On this graph we start by looking at the value for the lowest number of groups: 2. if I add a third group we see that the WSS value will decrease (from 0.09 to 0.03). If I add another group I will decrease this value again (from 0.03 to 0.01). After that, adding a group no longer or only slightly affects the value. Adding a group is therefore not interesting, we keep a partition with 4 groups.</p>
+<p>On this graph, we start by looking at the value for the lowest number of groups: 2. If I add a third group, we see that the WSS value will decrease (from 0.09 to 0.03). If I add another group, this value decreases again (from 0.03 to 0.01). After that, adding a group has no or only a small effect on the value. Adding a group is therefore not interesting, we will keep a partition with 4 groups.</p>
 <h3 id=\"avesilplot\">Average silhouette Plot</h3>
-<p>This graph shows the average silhouette width of each partition (ROUSSEEUW 1987). The silhouette width is a limited index between -1 and 1, which is calculated for each observation. The closer the value is to 1, the better the observation is classified. We look for the average value for a partition closest to 1.</p>
+<p>This graph shows the average silhouette width of each partition (ROUSSEEUW 1987). The silhouette width is a bounded index between -1 and 1, calculated for each observation. The closer the value is to 1, the better the observation is classified. We look for the average value for a partition that is closest to 1.</p>
 <h4>Example:</h4>
 <p><img style=\"width:600px;\" src=\"GS/AveSil2.png\"></p>
-<p>On this graph we look for the maximum value. The best evaluation corresponds to the division into 7 groups. Looking at the second best partition we identify the one with 4 groups. Although the one with 7 groups is higher for this silhouette index we will select the partition in 4. we make this choice because of the WSSPlot which advised us the partition in 4.</p>
+<p>On this graph we look for the maximum value. The best score corresponds to the division into 7 groups. Looking at the second best partition, we identify the one with 4 groups. Although the one with 7 groups is higher for this silhouette index, we will choose the partition in 4. We make this choice because the WSSPlot advised us the partition in 4.</p>
 
 
 <hr>
 <h2 id=\"output\">Output</h2>
 <hr>
-<h4>The selection of a partition is done by clicking on the dendrogram at the desired height.</h4>
-<p>You can change it at any moment.</p>
+<h4>A partition is selected by clicking on the dendrogram at the desired height.</h4>
+<p>You can change it at any tmie.</p>
 <div id=\"dendrogram\" style=\"display:inline-block\">
   <img src=\"GS/dendro.png\">
   <img src=\"GS/dedroCut.png\">
@@ -315,11 +317,11 @@ write.table(data,file=\"path/to/name_file.csv\",sep=\";\",dec=\".\",row.names=FA
 <p><img src=\"GS/map.png\"></p><br>
 <h3 id=\"silhouette\">Silhouette</h3>
 <p><img src=\"GS/silhouette.png\"></p>
-<p>You can see on this plot the silhouette index for each observation of the selected partition. The observation are sorted in decreasing order and by cluster.</p><br>
+<p>This plot shows the silhouette index for each observation of the selected partition. The observations are sorted in descending order and by cluster.</p><br>
 <h3 id=\"summary\">Additionnal informations</h3>
-<p>above the map you can see a little description of the cluster. You can find the average value of each variable.</p>
-<p><img src=\"GS/consol.png\"></p>
-<p>Below the silhouette plot you have a summary of the diffrents values for each partition. You can find the dlim, the number of cluster, the WSS value the average sil_widht and if you are in univariate case the Moran index (MORAN, 1950) for each partition. The Moran index is a measure of spatial autocorrelation. It is calculated for each cluster of the partition and then the average is calculated to characterize the partition.</p>
+<p>Above the map you can see a small description of the cluster. You can find the average value of each variable.</p>
+<p><img src=\"GS/Consol.png\"></p>
+<p>Below the silhouette plot is a summary of the different values for each partition. You will find the dlim, the number of clusters, the WSS value, the average sil_widht and, if you are in the univariate case, the Moran index (MORAN, 1950) for each partition. The Moran index is a measure of spatial autocorrelation. It is calculated for each cluster of the partition and then the average is calculated to characterise the partition.</p>
 <p><img src=\"GS/summary.png\"></p>
 
 

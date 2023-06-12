@@ -1,11 +1,11 @@
 \name{hclustcompro_select_alpha}
 \alias{hclustcompro_select_alpha}
 \title{
-Estimation of the optimal value(s) for the alpha parameter.}
+Estimate the optimal value(s) of the \eqn{\alpha} parameter.}
 \description{
-The following criterion "balances" the weight of D1 and D2 in the final clustering. The alpha value is only a point estimate but the confidence interval gives a range of possible values.
+The following criterion "balances" the weight of \eqn{D_1} and \eqn{D_2} in the final clustering. The \eqn{\alpha} value is only a point estimate but the confidence interval gives a range of possible values.
 \cr\cr
-Based on a resampling process, we generate clones and recalculate the criteria according to alpha (see below).}
+Based on a resampling process, we generate clones and recalculate the criteria according to \eqn{\alpha} (see below).}
 
 \usage{
 hclustcompro_select_alpha(
@@ -20,66 +20,66 @@ hclustcompro_select_alpha(
 }
 \arguments{
   \item{D1}{
-    First dissimilarity matrix or contingency table (square matrix)
+    First dissimilarity matrix or contingency table (square matrix).
   }
   \item{D2}{
-    Second dissimilarity matrix or network data (square matrix) same size than D1
+    Second dissimilarity matrix or network data (square matrix) of the same size as D1.
   }
   \item{acc}{
-    Number of digits after the comma for the alpha value
+    Number of digits after the decimal point for the alpha value.
   }
   \item{resampling}{
-    Logical for estimate the confidence interval with resampling strategy. If you have a lot of data you can save calculation time by setting this option to FALSE
+    Logical for estimating the confidence interval with a resampling strategy. If you have a lot of data, you can save computation time by setting this option to FALSE.
   }
   \item{method}{
-    The agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC)
+    The agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
   }
   \item{iter}{
-    The number of clones cheked for each observation. (200 observations iter=1: ~30 secs, 1000 observations iter=1: ~40 mins)
+    The number of clones checked per observation. (200 observations iter=1: ~30 sec, 1000 observations iter=1: ~40 min).
   }
   \item{suppl_plot}{
-Logical define whether to display additional plots.
+    Logical defines whether additional plots should be displayed.
   }
 }
 \details{
 \strong{Definition of the criterion:}\cr\cr
 
-A criterion for choosing alpha IN [0;1] must be determined by balancing the weights between the two information sources in the final classification. To obtain alpha, we define the following criterion:
-\deqn{CorCrit_alpha = |Cor(dist_cophenetic,D1) - Cor(dist_cophenetic,D2)|}  \deqn{Equation (1)}
-The CorCrit_alpha criterium in (1) represents the difference in absolute value between two cophenetic correlation (Cophenetic correlation is defined as the correlation between two distances matrices. It is calculated by considering the half distances matrices as vectors. It measures of how faithfully a dendrogram preserves the pairwise distances between the original unmodeled data points). The first correlation is associated with the comparison between D1 and ultrametric distances from the HAC with alpha fixed; while the second compares D2 and ultrametric distances from the HAC with alpha fixed. Then, in order to compromise between the information provided by D1 and D2, we decided to estimate alpha with hat(alpha) such that:
-\deqn{hat(alpha) = min CorCrit_alpha}
+A criterion for choosing \eqn{\alpha \in [0;1]} must be determined by balancing the weights between the two sources of information in the final classification. To obtain \eqn{\alpha}, we define the following criterion
+\deqn{CorCrit_\alpha = |Cor(dist_{cophenetic},D_1) - Cor(dist_{cophenetic},D_2)|}  \deqn{Equation (1)}
+The \eqn{CorCrit_\alpha} criterion in (1) represents the difference in absolute value between two cophenetic correlations (cophenetic correlation is defined as the correlation between two distance matrices. It is calculated by considering the half distance matrices as vectors. It measures how faithfully a dendrogram preserves the pairwise distances between the original unmodeled data points). The first correlation is related to the comparison between \eqn{D_1} and the ultrametric distances of the clustering with \eqn{\alpha} fixed, while the second compares \eqn{D_2} and the ultrametric distances of the clustering with \eqn{\alpha} fixed. Then, in order to compromise between the information provided by \eqn{D_1} and \eqn{D_2}, we decided to estimate \eqn{\alpha} with \eqn{\hat{\alpha}} such that:
+\deqn{\hat{\alpha} = min CorCrit_\alpha}
 \deqn{Equation (2)}
 
 \strong{Resampling strategy:}\cr\cr
 
-To do this, a set of "clones" is created for each observation i. A clone c of observation i is a copy of observation i for which the distances from the second source of information have been modified. The change is made by copying the distances, for the second source, from another observation j. A HAC is then carried out using the combination defined in (1) with D1(c) a (n+1)X(n+1) matrix where the observations i and c are identical and D2(c) a (n+1)X(n+1) matrix where the clone c of i has different distances from those of i. A set of clones is generated by varying j for all observations except i. We can create a set of n-1 clones for each element i in n, so n(n-1) clones in total.
+This is done by creating a set of "clones" for each observation \eqn{i}. A clone \eqn{c} of observation \eqn{i} is a copy of observation \eqn{i} for which the distances from the second source have been modified. The modification is made by copying the distances for the second source from another observation \eqn{j}. A clustering is then performed using the combination defined in (1) with \eqn{D_1^{(c)}} an \eqn{(n+1)\times(n+1)} matrix where observations \eqn{i} and \eqn{c} are identical and \eqn{D_2^{(c)}} an \eqn{(n+1)\times(n+1)} matrix where the clone \eqn{c} of \eqn{i} has different distances from those of \eqn{i}. A set of clones is generated by varying \eqn{j} for all observations except \eqn{i}. We can generate a set of \eqn{n-1} clones for each element \eqn{i} in \eqn{n}, so \eqn{n(n-1)} clones in total.
 
-Intuitively, by varying alpha between 0 and 1, we will be able to identify when the clone and the initial observation will be separated on the dendrogram. This moment will correspond to the value of alpha above which the weight given to information on the connection between observations contained in D2 has too much impact on the results compared to that of D1.
+Intuitively, by varying \eqn{\alpha} between 0 and 1, we will be able to identify when the clone and the original observation are separated on the dendrogram. This moment will correspond to the value of alpha above which the weight given to the information about the connection between observations contained in \eqn{D_2} has too much influence on the results compared to that of \eqn{D_1}.
 
-Let CorCrit_alpha(c) defines the same criterion as in (1) in which D1 ans D2 are replaced respectively by D1(c) and D2(c).
-The estimated alpha is the average of estimated values for each clone.\cr
-For each clone (c):
-\deqn{hat(alpha)(c) = min   CorCrit_alpha(c)}
+Let \eqn{CorCrit_\alpha^{(c)}} define the same criterion as in (1), where \eqn{D_1} and \eqn{D_2} are replaced by \eqn{D_1^{(c)}} and \eqn{D_2^{(c)}} respectively.
+The estimated \eqn{\alpha} is the mean of the estimated values for each clone.\cr
+For each clone \eqn{c}:
+\deqn{\hat{\alpha}^{(c)} = min   CorCrit_\alpha^{(c)}}
 \deqn{Equation (3)}
-hat(alpha)^* is the average of the hat(alpha)(c). In the same spirit as confidence intervals based on bootstrap percentiles (Efron & Tibshirani, 1993), a percentile confidence interval based on replication is also be obtained using the empirical percentiles of the distribution of hat(alpha)(c).
-\deqn{hat(alpha)* = (1 / n(n-1) ) * sum{ hat(alpha)(c) }}
+\eqn{\hat{\alpha}^*} is the mean of \eqn{\hat{\alpha}^{(c)}}. In the same spirit as confidence intervals based on bootstrap percentiles (Efron & Tibshirani, 1993), a percentile confidence interval based on replication is also be obtained using the empirical percentiles of the distribution of \eqn{\hat{\alpha}^{(c)}}.
+\deqn{\hat{\alpha}^* = \frac{1}{n(n-1)} \sum{ \hat\alpha^{(c)} }}
 \deqn{Equation (4)}
-\deqn{c IN [1 ; n(n-1)].}
+\deqn{c  \in [1; n(n-1)]}
 
 \strong{Warnings:}\cr\cr
-It is possible to observe an alpha value outside the confidence interval. This problem can be solved, in some cases, by increasing the number of iterations or by changing the number of axes used for the construction of the matrix D1 following the correspondence analysis. If alpha nevertheless remains outside the interval, it means that the data is noisy and the resampling procedure is affected.
+It is possible to observe an \eqn{\alpha} value outside the confidence interval. In some cases, this problem can be solved by increasing the number of iterations or by changing the number of axes used to construct the matrix D1 after the correspondence analysis. If the \eqn{\alpha} value remains outside the interval, it means that the data are noisy and the resampling procedure is affected.
 }
 
 
 \value{
 The function returns a list (class: selectAlpha_obj).
-  \item{alpha }{The estimate value of the parameter alpha (min CorCrit_alpha)}
-  \item{alpha.plot }{The CorCrit for all the possible alpha}
+  \item{alpha }{The estimated value of the alpha parameter (min CorCrit_alpha)}
+  \item{alpha.plot }{The CorCrit curve for alpha between 0 and 1}
 If resampling = TRUE
   \item{sd }{The standard deviation}
-  \item{conf }{The confidence interval of alpha.}
-  \item{boxplot }{boxplot of alpha estimation with resampling}
-  \item{values }{All the potential alpha values obtained from clones}
+  \item{conf }{The confidence interval of alpha}
+  \item{boxplot }{The boxplot of alpha estimation with resampling}
+  \item{values }{All potential alpha values obtained from each clone}
 %%  \item{comp2 }{Description of 'comp2'}
 }
 
@@ -93,36 +93,6 @@ P. HUSI
 
 
 \examples{
-
-###################################
-#      For view the Equation      #
-###################################
-
-plot(
-  c(.6,.6,.6,.6),
-  c(.9,.5,-.3,-.7),
-  xlim = c(.6,1.4),
-  ylim = c(-1.1,1),
-  axes = FALSE,
-  main = "Equations:",
-  xlab = "",
-  ylab = "",
-  pch = 1
-)
-text(.65, .9, "( 1 )")
-text(.65, .5, "( 2 )")
-text(.65,-.3, "( 3 )")
-text(.65,-.7, "( 4 )")
-
-text(1, .9,
-  expression(CorCrit[alpha] ==  abs(Cor(dist[cophenetic],dist[ceramic]) - Cor(dist[cophenetic],
-  dist[stratigraphic])
-)))
-text(1, .5, expression(hat(alpha) == min(CorCrit[alpha], alpha)))
-
-text(1,-.3, expression(hat(alpha)^(c) == min(CorCrit[alpha]^(c), alpha)))
-text(1,-.7, expression(hat(alpha)^"*" == frac(1,n(n-1)) * sum(hat(alpha)^(c),c==1,n(n-1))))
-
 #################################
 
 ##---- Should be DIRECTLY executable !! ----
