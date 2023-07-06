@@ -17,9 +17,18 @@ Depuis R
 install.packages("SPARTAAS")
 ```
 
+Depuis Github
+
+```
+library(devtools)
+install_github("arliph/SPARTAAS")
+```
+
 ---
 
 ### License
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 This package is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License, version 3, as
