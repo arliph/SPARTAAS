@@ -71,11 +71,11 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
 
     tmp.row.status = tmp.row.status[order(tmp.row.status$index),]
     #new row.sup
-    tmp.row.status = tmp.row.status[!colSums(df)<5,]
+    tmp.row.status = tmp.row.status[!rowSums(df)<5,]
     #retire la col de date
     date = date[!rowSums(df)<5]
     #retire la col de df
-    df = df[,!rowSums(df)<5]
+    df = df[!rowSums(df)<5,]
 
     row.ref = which(tmp.row.status$status == "ref")
     row.sup = which(tmp.row.status$status == "sup")
@@ -104,7 +104,6 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
   }else{
     data_sup = df[row.sup,-c(GT_rm_ref)]
   }
-
 
   #DOF Degrees of freedom
   DOF = min(ncol(data_ref)-1,nrow(data_ref)-1)
@@ -145,7 +144,7 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
 
   #final data
   DATA_TOT = rbind(DATA_REF, DATA_SUP)
-  DATA_TOT = DATA_TOT[c(row.ref,row.sup),]
+  DATA_TOT = DATA_TOT[sort(c(row.ref,row.sup)),]
 
   #linear regression
   #DATA_REF_lm = MASS::steapAIC(lm(date~.,data=DATA_REF, na.action=na.omit),trace=0)
@@ -170,10 +169,10 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
   Shapiro=shapiro.test(rstudent(DATA_REF_lm))
   if (Shapiro$p.value<0.05) {warning("The Shapiro-Wilks test indicates a problem with the normality of the residuals.",sep="")}
   # H0 : pas Autocorrelation D-W  test
-  DW=lmtest::dwtest(DATA_REF_lm)
+  DW=lmtest::dwtest(date~.,data=DATA_REF,alternative = "two.sided")
   if (DW$p.value<0.05) {warning("The Durbin-Watson test indicates a first order autocorrelation problem.",sep="")}
   # H0 : Homoscedasticite, B-P test
-  BP=lmtest::bptest(DATA_REF_lm)
+  BP=lmtest::bptest(date~.,data=DATA_REF)
   if (BP$p.value<0.05) {warning("The Breusch-Pagan test indicates a heteroskedasticity problem.",sep="")}
 
   #eval model
@@ -181,8 +180,8 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
     cbind(
       R_adj, R_sq, sigma,
       arrondi(shapiro.test(rstudent(DATA_REF_lm))$p.value,3),
-      arrondi(lmtest::dwtest(DATA_REF_lm)$p.value, 3),
-      arrondi(lmtest::bptest(DATA_REF_lm)$p.value,3)
+      arrondi(lmtest::dwtest(date~.,data=DATA_REF, alternative = "two.sided")$p.value, 3),
+      arrondi(lmtest::bptest(date~.,data=DATA_REF)$p.value,3)
     )
   )
   dimnames(mod1.diagGl)[[2]]<-c("R2_aj", "R2", "sigma", "Shapiro p-value", "D-W p-value", "B-P p-value")
@@ -200,9 +199,9 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
 
   #matrix proportion GT
   if(sum(GT_rm_ref)==0){
-    cont = df
+    cont = df[sort(c(row.ref,row.sup)),]
   }else{
-    cont = df[,-c(GT_rm_ref)]
+    cont = df[sort(c(row.ref,row.sup)),-c(GT_rm_ref)]
   }
 
   cont.gt = cont
@@ -227,7 +226,7 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
   }
 
   date_predict = arrondi(cbind(
-    date,
+    date[sort(c(row.ref,row.sup))],
     predict_obj_row$fit,
     median_tab
   ),0)
@@ -254,10 +253,10 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
     theme(
       panel.grid.major.x = element_line(color = rgb(0.5,0.5,0.5,0.3),
-                                        size = .1,
+                                        linewidth = .1,
                                         linetype = 2),
       panel.grid.major.y = element_line(color = rgb(0.5,0.5,0.5,0.3),
-                                        size = .1,
+                                        linewidth = .1,
                                         linetype = 2),
       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
     )
@@ -283,10 +282,10 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
     theme(
       panel.grid.major.x = element_line(color = rgb(0.5,0.5,0.5,0.3),
-                                        size = .1,
+                                        linewidth = .1,
                                         linetype = 2),
       panel.grid.major.y = element_line(color = rgb(0.5,0.5,0.5,0.3),
-                                        size = .1,
+                                        linewidth = .1,
                                         linetype = 2),
       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
     )
@@ -353,13 +352,52 @@ cerardat_estim_nf <- function(df, row.sup, date){
   #vector for ref data (every not in col.sup)
   row.ref = which(!(1:length(df[,1]) %in% row.sup))
 
+  #rm row(ens) < 5
+  #si row < 5
+  if(sum(rowSums(df)<5)!=0){
+    warning(paste0("The sums of rows ",capture.output(cat(row.names(df)[which(rowSums(df)<5)]))," are less than 5. They were suppressed from the analysis."))
+    #retire index de la row dans row.sup
+    tmp.row.status = data.frame(
+      index = c(row.ref,row.sup),
+      status = c(rep("ref",length(row.ref)),rep("sup",length(row.sup)))
+    )
+
+    tmp.row.status = tmp.row.status[order(tmp.row.status$index),]
+    #new row.sup
+    tmp.row.status = tmp.row.status[!rowSums(df)<5,]
+    #retire la col de date
+    date = date[!rowSums(df)<5]
+    #retire la col de df
+    df = df[!rowSums(df)<5,]
+
+    row.ref = which(tmp.row.status$status == "ref")
+    row.sup = which(tmp.row.status$status == "sup")
+  }
+
+
+
   #nettoyage des GT ie GT<5
   GT_rm_ref = which(colSums(df[row.ref,])<5)
+
+  if(sum(colSums(df[row.ref,])<5)!=0){
+    warning(paste0("The sums of columns (GT) ",capture.output(cat(names(df)[which(colSums(df[row.ref,])<5)]))," are less than 5. They were suppressed from the analysis."))
+  }
   #?????????????????
-  #GT_rm_sup = which(colSums(df[-c(GT_rm_ref),col.sup])<5)
+  #GT_rm_sup = which(colSums(df[-c(GT_rm_ref),row.sup])<5)
 
   #data reference
-  data_ref = df[row.ref,-c(GT_rm_ref)]
+  if(sum(GT_rm_ref)==0){
+    data_ref = df[row.ref,]
+  }else{
+    data_ref = df[row.ref,-c(GT_rm_ref)]
+  }
+
+  if(sum(GT_rm_ref)==0){
+    data_sup = df[row.sup,]
+  }else{
+    data_sup = df[row.sup,-c(GT_rm_ref)]
+  }
+
 
   #DOF Degrees of freedom
   DOF = min(ncol(data_ref)-1,nrow(data_ref)-1)
@@ -381,6 +419,11 @@ cerardat_estim_nf <- function(df, row.sup, date){
   PRESS <- c()
   R_sq <- c()
 
+
+  SW <- c()
+  DW <- c()
+  BP <- c()
+
   for(i in 1:max){
     if(i == 1){
       formula <- paste0(formula,' Axis',i)
@@ -396,6 +439,10 @@ cerardat_estim_nf <- function(df, row.sup, date){
     MSE <- c(MSE,mean(lm$residuals^2))
     PRESS <- c(PRESS,press(lm))
 
+    SW = c(SW,arrondi(shapiro.test(rstudent(lm))$p.value,3))
+    DW = c(DW,arrondi(lmtest::dwtest(as.formula(formula),data = DATA_REF, alternative = "two.sided")$p.value,3))
+    BP = c(BP,arrondi(lmtest::bptest(as.formula(formula),data = DATA_REF)$p.value,3))
+
   }
 
   data2 = data.frame(
@@ -404,6 +451,20 @@ cerardat_estim_nf <- function(df, row.sup, date){
     PRESS = PRESS,
     R_sq = R_sq
   )
+
+  data3 = data.frame(
+    nf = rep(1:max,3),
+    p.value=c(SW,DW,BP),
+    test=c(rep("Shapiro-Wilks",max),rep("Durbin-Watson",max),rep("Breusch-Pagan",max))
+  )
+
+  pTest = ggplot(data3) +
+    ylab("p.value") + xlab("Number of component in lm()") +
+    ggtitle("hypothesis tests p.value") +
+    geom_point(shape=1,aes(x = nf,y = p.value, col=test)) +
+    geom_line(aes(x = nf,y = p.value, col=test)) +
+    geom_line(aes(x = nf,y = 0.05)) +
+    theme_classic()
 
   pMSE = ggplot(data2) +
     ylab("MSE") + xlab("Number of component in lm()") +
@@ -449,8 +510,10 @@ cerardat_estim_nf <- function(df, row.sup, date){
         nf= which(data2$PRESS == min(data2$PRESS)),
         MSE = pMSE,
         PRESS = pPRESS,
+        hypothesis = pTest,
         adj.R_sq = pR_sq,
-        data = data2
+        data = data2,
+        data_stat = data3
       ),
       class = c("list")
     )
@@ -612,7 +675,7 @@ extract_results = function(cerardat,
 
   if(is.null(ylim)){
     tmp_ = c()
-    for(i in 1:ncol(cerardat$cont_gt) )
+    for(i in 1:nrow(cerardat$cont_gt) )
     {
       date_accumulation <- nor1mix::norMix(mu = GT_date_sd[,1], w = unlist(as.vector(cerardat$cont_gt[i,])), sigma= GT_date_sd[,2])
       date_accumulation_density = nor1mix::dnorMixL(date_accumulation, xlim=xlim)
@@ -622,7 +685,7 @@ extract_results = function(cerardat,
     ylim=c(0,max(tmp_))
   }
 
-  for(i in 1:ncol(cerardat$cont_gt) )
+  for(i in 1:nrow(cerardat$cont_gt) )
   {
     date_accumulation = nor1mix::norMix(mu=GT_date_sd[,1],w=unlist(as.vector(cerardat$cont_gt[i,])),sigma=GT_date_sd[,2])
     date_accumulation_density = nor1mix::dnorMixL(date_accumulation,xlim=xlim)

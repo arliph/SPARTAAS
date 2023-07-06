@@ -65,7 +65,8 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                      HTML("<p>This method is part of the <a href='https://spartaas.gitpages.huma-num.fr/r-package/index.html' target='_blank'>SPARTAAS</a> package.</p>
                                                         <p>If you are interested you can install our R package available on the <a href='https://cran.r-project.org/package=SPARTAAS' target='_blank'>CRAN</a> and on <a href='https://github.com/arliph/SPARTAAS' target='_blank'>GitHub</a>.</p>
                                                         <p>There is also a macro version in LibreOffice Calc. You can find it <a href='https://abp.hypotheses.org/le-programme-bassin-parisien/les-projets/les-projets-associes-au-programme/outils-danalyse-graphique-des-donnees' target='_blank'>here</a>.</p>
-                                                        ")
+                                                        <hr style=\"border-color: #222222;\">
+                                                        <p><b>Desachy B.</b> (2004) Le sériographe EPPM : un outil informatisé de sériation graphique pour tableaux de comptages. In: Revue archéologique de Picardie, n°3-4, 2004. Céramiques domestiques et terres cuites architecturales. Actes des journées d'étude d'Amiens (2001-2002-2003) pp. 39-56 <a href=\"https://doi.org/10.3406/pica.2004.2396\" target=\"_blank\">⟨doi:10.3406/pica.2004.2396⟩</a>.</p>")
 
                                         ),
                                       #-----------------------------------#
@@ -85,8 +86,25 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                            ),
                            tabPanel(value = "2",span(icon("chart-area", lib = "font-awesome"),strong("seriograph")),style="max-width:1200px;",
                                     sidebarPanel(style = 'max-width:300px;',
-                                                 h4("Import your data:"),actionButton("data",
-                                                                                      icon("import", lib = "glyphicon")),
+                                                 h4("Import your data:"),
+                                                 column(10,
+                                                        actionButton("data",
+                                                                                      icon("import", lib = "glyphicon"))
+                                                 ),
+                                                 column(1,
+                                                        # Help
+                                                        dropdownButton(
+                                                          h3("data format"),
+                                                          hr(style="border-color: #222222;"),
+                                                          HTML("<p>The data is in the form of a count table with the contexts in rows and the categories (GT) in columns.</p>
+                                                       <p>Example:</p>
+                                                       <img style='width:280px;' src='GS/exemple.png' alt='data'>"),
+                                                          circle = TRUE, status = "danger", icon = icon("question"), width = "300px",
+                                                          size = "sm",right=FALSE,
+                                                          tooltip = tooltipOptions(title = "Help", placement = "top")
+                                                        )
+                                                        # Help
+                                                 ),
                                                  div(style="height:200px;"),
                                                  prettyToggle(
                                                    inputId = "permute",
@@ -232,9 +250,6 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
 <p>This input allows you to enable or disable the seriation of the columns. The matrix permutation uses an algorithm called 'reciprocal averages'. Each row is assigned a rank from 1 to n, the number of rows. For each column, a barycentre is calculated by weighting according to the row rank. Finally, the columns are reorganised by sorting them according to their barycentre.</p>
 <p><img src=\"GS/seriation.png\"></p>
 
-<h3 id=\"weight\">Weight color indicator</h3>
-<p>This input makes it possible to activate or not the coloring of the weight column in order to highlight the confidence related to the quantity of data.</p>
-<p><img src=\"GS/weight.png\"></p>
 
 <h3 id=\"show1\">Visualization</h3>
 <p>This input allows you to select the element to be plotted. There are tree options: plot the positive deviation from the average percentage (EPPM in French), plot the frequency or plot both. The average percentage is calculated for each category (columns) on the total number of accounts (all classes combined). From the average percentage, we obtain for each category and for each row the difference between the percentage of the category in the class and the average percentage. The EPPM corresponds to the notion of independence deviation (between rows and columns, between categories and time classes) in a chi-square test approach. Although this approach is fundamental in statistical analysis, the independence deviations here are purely indicative and are not associated with a p_value that could determine the significance of the deviations.</p>
@@ -246,6 +261,8 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
 
 <h3 id=\"import\">Import your data</h3>
 <p>You can import your data. You will need to upload a csv for the contingency table.</p>
+<p>The data is in the form of a count table with the contexts in rows and the categories (GT) in columns.</p>
+<img src='GS/exemple.png'>
 <p><img src=\"GS/import1.png\"></p>
 
 <p>The settings allow you to import different data frame organisation (header, column separator, ...).</p>

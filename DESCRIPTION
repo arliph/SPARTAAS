@@ -1,7 +1,7 @@
 Package: SPARTAAS
 Type: Package
 Title: Statistical Pattern Recognition and daTing using Archaeological Artefacts assemblageS
-Version: 1.2.1
+Version: 1.2.2
 Authors@R: c(person("Arthur","Coulon", role = c("aut","cre"),
                      email = "arthur-coulon@outlook.fr"),
              person("Lise","Bellanger", role = "aut",
