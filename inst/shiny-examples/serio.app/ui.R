@@ -118,7 +118,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                                                                     "frequencies" = 2,
                                                                                                     "EPPM" = 3),
                                                              selected = 1),
-                                                 actionButton("sort",span(icon("sort",lib="font-awesome"),"Sort periods"))
+                                                 actionButton("sort",span(icon("sort",lib="font-awesome"),"Sort rows"))
                                     ),
                                     mainPanel(style = 'max-width:1000px;',
                                       ####################################

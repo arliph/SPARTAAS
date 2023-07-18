@@ -28,8 +28,10 @@ The dates of each observation or NA (vector).
 \item{nf }{Number of axes to keep (minimal PRESS value)}
 \item{MSE }{plot of the Mean Squared Error.}
 \item{PRESS }{plot of the PRediction Error Sum Of Squares.}
+\item{Pvalue }{plot of p-values from statistical tests on the hypotheses.}
 \item{adj.R_sq }{plot of the Coefficient of determination R².}
 \item{data }{data frame of MSE, PRESS and R_sq values.}
+\item{data_stat }{data frame of the p-values.}
 
 }
 \references{

@@ -24,13 +24,13 @@ a \link[SPARTAAS]{cerardat} output.
   the width of the graphics region in pixels.
 }
   \item{path}{
-  directory where plots are exported. (relative path from the working directory)
+  directory where plots are exported (relative path from the working directory). Automatically generates two sub-folders 'ref' for the reference plot and 'sup' for the supplementary  plot.
 }
   \item{col1}{
-  Color of the the Event curve.
+  Color of the the Event curve (color name, hex code, \link[grDevices]{rgb} function \{grDevices\} for transparency).
 }
   \item{col2}{
-  Color of the the Accumulation curve.
+  Color of the the Accumulation curve (color name, hex code, \link[grDevices]{rgb} function \{grDevices\} for transparency).
 }
   \item{xlim}{
   Two numeric values, specifying the left limit and the right limit of the scale.
@@ -60,9 +60,10 @@ resultat = cerardat(df = datacerardat$df,
            confidence = 0.95,
            graph = TRUE
         )
-#Generates all plots (in jpeg format) in a subfolder 'figures'
+#Generates all plots (in jpeg format) in a folder 'figures'
+#You will find the jpeg in 'ref' and 'sup' subfolder
 #extract_results(resultat,width=480, height=480, path="figures",
-#     col1=rgb(0.93,0.23,0.23,0.5),
+#     col1=grDevices::rgb(0.93,0.23,0.23,0.5),
 #     col2="black",
 #     xlim=NULL,
 #     ylim=c(0,0.03)

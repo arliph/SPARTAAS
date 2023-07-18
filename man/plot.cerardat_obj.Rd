@@ -21,10 +21,10 @@ a \link[SPARTAAS]{cerardat} output.
   Vector containing the plots you want (row number on the contingence table: numeric).
 }
   \item{col1}{
-  Color of the Event curve.
+  Color of the Event curve (color name, hex code, \link[grDevices]{rgb} function \{grDevices\} for transparency).
 }
   \item{col2}{
-  Color of the Accumulation curve.
+  Color of the Accumulation curve (color name, hex code, \link[grDevices]{rgb} function \{grDevices\} for transparency).
 }
   \item{xlim}{
   Two numeric values, specifying the left limit and the right limit of the scale.

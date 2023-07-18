@@ -619,7 +619,7 @@ seriograph <- function(cont, order = NULL, insert = NULL, show = "both", permute
       }
       pelt <- elt
     }
-    message(blue("Distribution of elements in the different clusters:\n"))
+    message("Distribution of elements in the different clusters:\n")
 
     if(length(remove) >= 1){
       removeseq <- which(seq >= 900)

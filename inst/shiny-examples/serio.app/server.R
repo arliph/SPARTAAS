@@ -14,7 +14,7 @@ EPM <- function(x) {
   return(TabEcart)
 }
 
-plot_EPPM <- function(x,show,permute,col_weight) {
+plot_EPPM <- function(x,show,permute) {
   if(is.table(x)){
     x <- as.data.frame(x)
     x <- matrix(x[,3],
@@ -203,18 +203,31 @@ server <- function(input, output, session) {
   #  modalDialog sort periods
   #------------------------------------------------------#
   sortPeriod <- function(failed = FALSE) {
-    modalDialog(title="Sort Periods:",size=c("m"),
+    modalDialog(title="Sort clusters:",size=c("m"),
                 div(style="height:15px;"),
-                h3("Sort periods",style="text-align:center;"),hr(style="border-color: #222222;"),
-                h4("Sort each cluster from the oldest to the newest!"),
-                helpText("Note: Drag and drop clusters to sort them.
-                         Drag unused clusters into the trash to remove them from the seriograph.
+                h3("Sort rows",style="text-align:center;"),hr(style="border-color: #222222;"),
+                h4("Sort each row from the oldest to the newest!"),
+                helpText("Note: Drag and drop rows to sort them.
+                         Drag unused row into the trash to remove them from the seriograph.
                          You can insert 'Hiatus' by picking it up and dropping it off where you want."),
-                orderInput('seq2',span(icon("sort-amount-up",lib = "font-awesome"),'Sort the cluster'),
-                           items = labels(values[["data1"]])[[1]],
+                orderInput('seq2',span(icon("sort-amount-up",lib = "font-awesome"),'Sort the row'),
+                           items = labels(values[["data1"]])[[1]] [ values[["new_order"]] ] ,
                            placeholder = 'There must be at least one item',
+                           connect = "rm",
                            item_class = 'success'),
                 hr(style="border-color: #b2b2b2;"),
+                column(4,
+                       orderInput('hiatus', span(icon("plus",lib = "font-awesome"),'Add'), items = c("Hiatus"),
+                                  connect = 'seq2', as_source = TRUE, item_class = 'warning', width = '70px')
+                ),
+                column(8,
+                       orderInput('rm', span(icon("trash",lib = "font-awesome"),'Remove from seriograph'),
+                                  items = values[["rm"]],
+                                  connect = "seq2",
+                                  placeholder = 'Drag the items here to delete them',
+                                  item_class = 'danger')
+                ),
+                div(style="height:50px;"),
                 if (failed)
                   div(tags$b("You have to select the sequence!", style = "color: red;")),
                 footer = tagList(
@@ -225,10 +238,12 @@ server <- function(input, output, session) {
   }
 
   values <- reactiveValues()
+  values[["hiatus"]] <- NULL
+  values[["rm"]] <- NULL
   values[["seriograph"]] <- NULL
   shinyjs::hide("toggle")
   #contingency table
-  values[["data1"]] <- data.frame(
+  df = data.frame(
     Cat10 = c(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
     Cat20 = c(4,8,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0),
     Cat30 = c(18,24,986,254,55,181,43,140,154,177,66,1,24,15,0,31,37),
@@ -244,6 +259,38 @@ server <- function(input, output, session) {
     row.names = c("AI01","AI02","AI03","AI04","AO03","AI05","AO01","AI07","AI08",
                   "AO02","AI06","AO04","APQR01","APQR02","AO05","APQR03","AI09")
   )
+  values[["data1"]] <- df
+  values[["new_order"]] <- 1:17
+
+  #url param
+  o=observe({
+    query <- parseQueryString(session$clientData$url_search)
+
+    for (i in 1:(length(reactiveValuesToList(input)))) {
+      nameval = names(reactiveValuesToList(input)[i])
+      valuetoupdate = query[[nameval]]
+
+      if (!is.null(query[[nameval]])) {
+        if (is.na(as.numeric(valuetoupdate))) {
+          #updateTextInput(session, nameval, value = valuetoupdate)
+          if(nameval == 'data'){
+            data1 = read.csv(valuetoupdate,header =TRUE, row.names=1, sep=",")
+            if(ncol(data1)==0){
+              data1 = read.csv(valuetoupdate,header =TRUE, row.names=1, sep=";")
+            }
+            values[["data1"]] = data1
+            values[["new_order"]] <- 1:length(labels(data1)[[1]])
+          }
+        }
+        else {
+          #updateTextInput(session, nameval, value = as.numeric(valuetoupdate))
+        }
+      }
+
+    }
+    o$destroy()
+
+  })
 
   observeEvent(input$width,{
     values[["width"]] <- input$width
@@ -252,11 +299,69 @@ server <- function(input, output, session) {
     values[["height"]] <- input$height
   })
 
+
+
   output$EPPM <- renderPlot({
     cont <- values[["data1"]]
     show <- c("both","frequency","EPPM")[as.numeric(input$show)]
-    plot_EPPM(cont, permute=input$permute, col_weight = input$col_weight, show = show)
+
+    hiatus <- values[["hiatus"]]
+    new_order <- values[["new_order"]]
+
+    #reorder and rm
+    if(length(new_order) > 0){
+      cont <- cont[new_order,]
+    }
+
+    #hiatus
+    if(length(hiatus) > 0 && sum(is.na(hiatus)) == 0){
+      #insert hiatus
+      label <- "Hiatus"
+      insert <- values[["hiatus"]]
+      insert <- sort(insert)
+      for (i in length(insert):1){
+        if(insert[i] < length(cont[,1]) && insert[i] >= 1 && insert[i] == trunc(insert[i])){
+          cont <- rbind(cont[1:insert[i],], label = rep(0,length(cont[1,])),
+                         cont[(insert[i]+1):length(cont[,1]),])
+          if(length(insert)== 1){
+            row.names(cont)[insert[i]+1] <- label
+          }else{
+            row.names(cont)[insert[i]+1] <- paste0(label,".",(length(insert)+1 - i))
+          }
+        }else{
+          warning("Some positions are outside the range. Ex: ",insert[i])
+        }
+      }
+    }
+
+    plot_EPPM(cont, permute=input$permute, show = show)
     values[["seriograph"]] <- recordPlot()
+  })
+
+  observeEvent(input$tri,{
+    order <- input$seq2
+
+    values[["rm"]] <- input$rm
+
+    if(is.na(order)[1] || ( length(order) == 1 && order[1] == "Hiatus" )){
+      removeModal()
+    }else{
+      hiatus <- which(order == "Hiatus")
+      for (i in 1:length(hiatus)){
+        hiatus[i] <- hiatus[i] - 1 * i
+      }
+
+      values[["hiatus"]] <- hiatus
+
+      order <- order[order != "Hiatus"]
+
+      new_order <- rep(NA,length(order))
+      for(i in 1:length(order)){
+        new_order[i] <- which(labels(values[["data1"]])[[1]] == order[i])
+      }
+      values[["new_order"]] <- new_order
+    }
+    removeModal()
   })
 
 
@@ -268,6 +373,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$Finishimport,{
     values[["data1"]] <- values[["D1"]]
+    values[["new_order"]] <- labels(values[["D1"]])[[1]]
     removeModal()
   })
 
@@ -348,17 +454,6 @@ server <- function(input, output, session) {
     }
   })
 
-  observeEvent(input$tri,{
-    order <- input$seq2_order
 
-    new_order <- rep(NA,length(order[,2]))
-
-    for(i in 1:length(order[,2])){
-      new_order[i] <- which(labels(values[["data1"]])[[1]] == order[i,2])
-    }
-    values[["data1"]] <- values[["data1"]][new_order,]
-
-    removeModal()
-  })
 
 }

@@ -53,8 +53,8 @@ In order to estimate a date for the context, it is essential to refer to objects
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
-\item{prediction }{Estimated date for archaeological context (event: dateEV and accumulation: dateAC) with confidence interval.}
-\item{date_gt }{Estimated date for technical groups with confidence interval. (use for dateAC)}
+\item{prediction }{Estimated date for archaeological context (event: dateEV and accumulation: dateAc) with confidence interval. The first two columns show the total count and the number of categories per line (only for columns used in CA). Then a date column shows the known dates. Each dateEv and dateAC model has three columns (value, lower bound, upper bound).}
+\item{date_gt }{Estimated date for technical groups with confidence interval (use for dateAc). The first column show the total count per category in the reference data (only for rows used in CA).}
 \item{lm }{Linear model on the components of the correspondance analysis.}
 
 \item{predict_obj_row }{date prediction of archaeological contexts (rows) using \link[stats]{predict.lm}.}

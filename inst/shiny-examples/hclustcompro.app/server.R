@@ -453,10 +453,10 @@ server <- function(input, output, session) {
   sortPeriod <- function(failed = FALSE) {
     modalDialog(title="Sort clusters:",size=c("m"),
                 div(style="height:15px;"),
-                h3("Sort periods",style="text-align:center;"),hr(style="border-color: #222222;"),
-                h4("Sort each cluster from the oldest to the newest!"),
+                h3("Sort rows",style="text-align:center;"),hr(style="border-color: #222222;"),
+                h4("Sort each row from the oldest to the newest!"),
                 helpText("Note: Drag and drop clusters to sort them.
-                         Drag unused clusters into the trash to remove them from the seriograph.
+                         Drag unused row into the trash to remove them from the seriograph.
                          You can insert 'Hiatus' by picking it up and dropping it off where you want."),
                 orderInput('seq2',span(icon("sort-amount-up",lib = "font-awesome"),'Sort the cluster'),
                            items = Int2Alpha(sort(unique(values[["cluster"]]))),
@@ -464,13 +464,13 @@ server <- function(input, output, session) {
                            item_class = 'success'),
                 hr(style="border-color: #b2b2b2;"),
                 column(4,
-                  orderInput('hiatus', span(icon("plus",lib = "font-awesome"),'Add'), items = c("Hiatus"),
-                             connect = 'seq2', as_source = TRUE, item_class = 'warning', width = '70px')
+                       orderInput('hiatus', span(icon("plus",lib = "font-awesome"),'Add'), items = c("Hiatus"),
+                                  connect = 'seq2', as_source = TRUE, item_class = 'warning', width = '70px')
                 ),
                 column(8,
-                  orderInput('rm', span(icon("trash",lib = "font-awesome"),'Remove from seriograph'),
-                             items = NULL,connect = "seq2", placeholder = 'Drag the items here to delete them',
-                             item_class = 'danger')
+                       orderInput('rm', span(icon("trash",lib = "font-awesome"),'Remove from seriograph'),
+                                  items = NULL,connect = "seq2", placeholder = 'Drag the items here to delete them',
+                                  item_class = 'danger')
                 ),
                 div(style="height:50px;"),
                 if (failed)

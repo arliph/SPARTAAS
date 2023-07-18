@@ -57,53 +57,53 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
   #vector for ref data (every not in row.sup)
   row.ref = which(!(1:length(df[,1]) %in% row.sup))
 
-  #todo: while convergence
+  df_ref = df[row.ref,]
+  df_sup = df[row.sup,]
+  date = c(date[row.ref],date[row.sup])
+  rownames = c(dimnames(df)[1][row.ref],dimnames(df)[1][row.sup])
 
-  #rm row(ens) < 5
-  #si row < 5
-  if(sum(rowSums(df)<5)!=0){
-    warning(paste0("The sums of rows ",capture.output(cat(row.names(df)[which(rowSums(df)<5)]))," are less than 5. They were suppressed from the analysis."))
-    #retire index de la row dans row.sup
-    tmp.row.status = data.frame(
-      index = c(row.ref,row.sup),
-      status = c(rep("ref",length(row.ref)),rep("sup",length(row.sup)))
-    )
+  clean = TRUE
+  GT_rm_names = c()
+  row_rm_names = c()
+  while(clean){
+    #clean, threshold: 5
+    #nettoyage des GT ie GT<5
+    GT_rm = which(colSums(df_ref)<5)
+    if(sum(GT_rm)!=0){
+      GT_rm_names = c(GT_rm_names,names(df_ref)[which(colSums(df_ref)<5)])
+      df_ref = df_ref[,-c(GT_rm)]
+      df_sup = df_sup[,-c(GT_rm)]
+    }
 
-    tmp.row.status = tmp.row.status[order(tmp.row.status$index),]
-    #new row.sup
-    tmp.row.status = tmp.row.status[!rowSums(df)<5,]
-    #retire la col de date
-    date = date[!rowSums(df)<5]
-    #retire la col de df
-    df = df[!rowSums(df)<5,]
+    #si row < 5
+    df_tmp = rbind(df_ref,df_sup)
+    row_rm = which(rowSums(df_tmp)<5)
+    if(sum(row_rm)!=0){
+      row_rm_names = c(row_rm_names,which(rowSums(df_tmp)<5))
+      df_ref = df_ref[!rowSums(df_ref)<5,]
+      df_sup = df_sup[!rowSums(df_sup)<5,]
+      date = date[-c(row_rm)]
+      rownames = rownames[-c(row_rm)]
+    }
 
-    row.ref = which(tmp.row.status$status == "ref")
-    row.sup = which(tmp.row.status$status == "sup")
+    if(sum(GT_rm)==0 & sum(row_rm)==0){
+      clean = FALSE
+    }
   }
 
+  row.ref = 1:length(df_ref[,1])
+  row.sup = (length(df_ref[,1])+1):(length(df_ref[,1])+length(df_sup[,1]))
 
+  data_ref = df_ref
+  data_sup = df_sup
 
-  #nettoyage des GT ie GT<5
-  GT_rm_ref = which(colSums(df[row.ref,])<5)
-
-  if(sum(colSums(df[row.ref,])<5)!=0){
-    warning(paste0("The sums of columns (GT) ",capture.output(cat(names(df)[which(colSums(df[row.ref,])<5)]))," are less than 5. They were suppressed from the analysis."))
+  if(length(row_rm_names)>0){
+    warning(paste0("The sums of ",length(row_rm_names)," rows are less than 5. They were suppressed from the analysis."))
   }
-  #?????????????????
-  #GT_rm_sup = which(colSums(df[-c(GT_rm_ref),row.sup])<5)
-
-  #data reference
-  if(sum(GT_rm_ref)==0){
-    data_ref = df[row.ref,]
-  }else{
-    data_ref = df[row.ref,-c(GT_rm_ref)]
+  if(length(GT_rm_names)>0){
+    warning(paste0("The sums of ",length(GT_rm_names)," columns in the reference data are less than 5. They were suppressed from the analysis."))
   }
 
-  if(sum(GT_rm_ref)==0){
-    data_sup = df[row.sup,]
-  }else{
-    data_sup = df[row.sup,-c(GT_rm_ref)]
-  }
 
   #DOF Degrees of freedom
   DOF = min(ncol(data_ref)-1,nrow(data_ref)-1)
@@ -112,13 +112,9 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
   #
   # nf <= DOF
 
-  if(is.null(nf)){
-    #AFC avec  tous les axes
-    #ca.NMI.init <- ade4::dudi.coa(data_ref,scannf=FALSE,nf=DOF)
 
-    #nb axe inertie > 60%
-    #k=min(which(ade4::inertia.dudi(ca.NMI.init, row.inertia=F, col.inertia=T)$tot.inertia[,3]>60))
-    k=cerardat_estim_nf(df, row.sup, date)$nf[1]
+  if(is.null(nf)){
+    k=cerardat_estim_nf(rbind(data_ref,data_sup), row.sup, date)$nf[1]
   }else{
     k=nf
   }
@@ -144,10 +140,10 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
 
   #final data
   DATA_TOT = rbind(DATA_REF, DATA_SUP)
-  DATA_TOT = DATA_TOT[sort(c(row.ref,row.sup)),]
+  #DATA_TOT = DATA_TOT[sort(c(row.ref,row.sup)),]
 
   #linear regression
-  #DATA_REF_lm = MASS::steapAIC(lm(date~.,data=DATA_REF, na.action=na.omit),trace=0)
+  #DATA_REF_lm = MASS::steapAIC(lm(date~., data=DATA_REF, na.action=na.omit),trace=0)
   DATA_REF_lm = lm(date~.,data=DATA_REF, na.action=na.omit)
 
   R_adj = arrondi(summary(DATA_REF_lm)$adj.r.squared,3)
@@ -195,14 +191,12 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
 
   ##### 95% des dates des GT
   date_gt = arrondi(predict_obj_col$fit,0)
-  dimnames(date_gt)[[2]]<-c("Fit_dateEv","lower","upper")
+  date_gt = cbind(colSums(df_ref),date_gt)
+  dimnames(date_gt)[[2]]<-c("Tot_count","Fit_dateEv","lower","upper")
 
   #matrix proportion GT
-  if(sum(GT_rm_ref)==0){
-    cont = df[sort(c(row.ref,row.sup)),]
-  }else{
-    cont = df[sort(c(row.ref,row.sup)),-c(GT_rm_ref)]
-  }
+  cont = rbind(data_ref,data_sup)
+
 
   cont.gt = cont
 
@@ -224,14 +218,18 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
     ex = nor1mix::norMix(mu = date_gt_sd[,1],w=unlist(as.vector(cont.gt[i,])),sigma= date_gt_sd[,2])
     median_tab[i,] = cbind(median.norMix(ex), nor1mix::qnorMix(0.025,ex), nor1mix::qnorMix(0.975,ex))
   }
-
+  cont_cat = cont
+  cont_cat[!cont_cat == 0] = 1
+  #here
   date_predict = arrondi(cbind(
-    date[sort(c(row.ref,row.sup))],
+    rowSums(cont),
+    rowSums(cont_cat),
+    date[c(row.ref,row.sup)],
     predict_obj_row$fit,
     median_tab
   ),0)
   dimnames(date_predict)[[1]]<-dimnames(predict_obj_row$fit)[[1]]
-  dimnames(date_predict)[[2]]<-c("date","Fit_dateEv","lower_Ev","upper_Ev","Median_dateAc","lower_Ac","upper_Ac")
+  dimnames(date_predict)[[2]]<-c("Tot_count","Category_number","date","Fit_dateEv","lower_Ev","upper_Ev","Median_dateAc","lower_Ac","upper_Ac")
 
   tmp = date_predict[row.ref,]
   tmp = tmp[!is.na(tmp$date),]
@@ -301,7 +299,7 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
         k                   = k,
         predict_obj_row     = predict_obj_row,
         predict_obj_col     = predict_obj_col,
-        cont_gt             = cont.gt,
+        cont_gt             = cont,
         statistical_summary = mod1.diagGl,
         obs_ca_eval         = obs_ca_eval,
         check_ref           = check_ref,
@@ -309,7 +307,6 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
         Shapiro_Wilks       = Shapiro,
         Durbin_Watson       = DW,
         Breusch_Pagan       = BP,
-        row.sup             = row.sup,
         call                = match.call()
       ),
       class = c("cerardat_obj","list")
@@ -319,6 +316,9 @@ cerardat = function(df, row.sup, date, nf = NULL, confidence = 0.95, graph = T){
 }
 
 cerardat_estim_nf <- function(df, row.sup, date){
+
+  p.value=0
+  test=0
 
   # df is data.frame
   if(!is.data.frame(df)){stop("df is not a data frame.")}
@@ -352,50 +352,51 @@ cerardat_estim_nf <- function(df, row.sup, date){
   #vector for ref data (every not in col.sup)
   row.ref = which(!(1:length(df[,1]) %in% row.sup))
 
-  #rm row(ens) < 5
-  #si row < 5
-  if(sum(rowSums(df)<5)!=0){
-    warning(paste0("The sums of rows ",capture.output(cat(row.names(df)[which(rowSums(df)<5)]))," are less than 5. They were suppressed from the analysis."))
-    #retire index de la row dans row.sup
-    tmp.row.status = data.frame(
-      index = c(row.ref,row.sup),
-      status = c(rep("ref",length(row.ref)),rep("sup",length(row.sup)))
-    )
+  df_ref = df[row.ref,]
+  df_sup = df[row.sup,]
+  date = c(date[row.ref],date[row.sup])
+  rownames = c(dimnames(df)[1][row.ref],dimnames(df)[1][row.sup])
 
-    tmp.row.status = tmp.row.status[order(tmp.row.status$index),]
-    #new row.sup
-    tmp.row.status = tmp.row.status[!rowSums(df)<5,]
-    #retire la col de date
-    date = date[!rowSums(df)<5]
-    #retire la col de df
-    df = df[!rowSums(df)<5,]
+  clean = TRUE
+  GT_rm_names = c()
+  row_rm_names = c()
+  while(clean){
+    #clean, threshold: 5
+    #nettoyage des GT ie GT<5
+    GT_rm = which(colSums(df_ref)<5)
+    if(sum(GT_rm)!=0){
+      GT_rm_names = c(GT_rm_names,names(df_ref)[which(colSums(df_ref)<5)])
+      df_ref = df_ref[,-c(GT_rm)]
+      df_sup = df_sup[,-c(GT_rm)]
+    }
 
-    row.ref = which(tmp.row.status$status == "ref")
-    row.sup = which(tmp.row.status$status == "sup")
+    #si row < 5
+    df_tmp = rbind(df_ref,df_sup)
+    row_rm = which(rowSums(df_tmp)<5)
+    if(sum(row_rm)!=0){
+      row_rm_names = c(row_rm_names,which(rowSums(df_tmp)<5))
+      df_ref = df_ref[!rowSums(df_ref)<5,]
+      df_sup = df_sup[!rowSums(df_sup)<5,]
+      date = date[-c(row_rm)]
+      rownames = rownames[-c(row_rm)]
+    }
+
+    if(sum(GT_rm)==0 & sum(row_rm)==0){
+      clean = FALSE
+    }
   }
 
+  row.ref = 1:length(df_ref[,1])
+  row.sup = (length(df_ref[,1])+1):(length(df_ref[,1])+length(df_sup[,1]))
 
+  data_ref = df_ref
+  data_sup = df_sup
 
-  #nettoyage des GT ie GT<5
-  GT_rm_ref = which(colSums(df[row.ref,])<5)
-
-  if(sum(colSums(df[row.ref,])<5)!=0){
-    warning(paste0("The sums of columns (GT) ",capture.output(cat(names(df)[which(colSums(df[row.ref,])<5)]))," are less than 5. They were suppressed from the analysis."))
+  if(length(row_rm_names)>0){
+    warning(paste0("The sums of ",length(row_rm_names)," rows are less than 5. They were suppressed from the analysis."))
   }
-  #?????????????????
-  #GT_rm_sup = which(colSums(df[-c(GT_rm_ref),row.sup])<5)
-
-  #data reference
-  if(sum(GT_rm_ref)==0){
-    data_ref = df[row.ref,]
-  }else{
-    data_ref = df[row.ref,-c(GT_rm_ref)]
-  }
-
-  if(sum(GT_rm_ref)==0){
-    data_sup = df[row.sup,]
-  }else{
-    data_sup = df[row.sup,-c(GT_rm_ref)]
+  if(length(GT_rm_names)>0){
+    warning(paste0("The sums of ",length(GT_rm_names)," columns in the reference data are less than 5. They were suppressed from the analysis."))
   }
 
 
@@ -510,7 +511,7 @@ cerardat_estim_nf <- function(df, row.sup, date){
         nf= which(data2$PRESS == min(data2$PRESS)),
         MSE = pMSE,
         PRESS = pPRESS,
-        hypothesis = pTest,
+        Pvalue = pTest,
         adj.R_sq = pR_sq,
         data = data2,
         data_stat = data3
@@ -589,8 +590,6 @@ plot.cerardat_obj = function(x,
     ylim=c(0,max(tmp_))
   }
 
-  row.ref = which(!(1:length(ens_date_sd$Pred) %in% x$row.sup))
-
   for(i in which)
   {
     date_accumulation <- nor1mix::norMix(mu = GT_date_sd[,1], w = unlist(as.vector(x$cont_gt[i,])), sigma= GT_date_sd[,2])
@@ -603,7 +602,6 @@ plot.cerardat_obj = function(x,
     date_accumulation_density$y[date_accumulation_density$y > ymax] = ymax
     date_evenement_density$y[date_evenement_density$y > ymax] = ymax
 
-
     date_accumulation_density$y[1] = 0
     date_evenement_density$y[1] = 0
 
@@ -612,10 +610,10 @@ plot.cerardat_obj = function(x,
     sub=""
 
 
-    if(i %in% x$row.sup){
+    if(i > length(x$obs_ca_eval[,1])){
       sub=""
     }else{
-      sub=paste("Quality of row representation (cos2) in correspondence analysis:",arrondi(sum(x$obs_ca_eval[which(row.ref == i),1:x$k]),2))
+      sub=paste("Quality of row representation (cos2) in correspondence analysis:",arrondi(sum(x$obs_ca_eval[i,1:x$k]),2))
     }
 
 
@@ -662,6 +660,12 @@ extract_results = function(cerardat,
   if(!dir.exists(path))
     dir.create(path)
 
+  if(!dir.exists(paste0(path,"/ref")))
+    dir.create(paste0(path,"/ref"))
+
+  if(!dir.exists(paste0(path,"/sup")))
+    dir.create(paste0(path,"/sup"))
+
   ens_date_sd = arrondi(cbind(
     Pred=data.frame(cerardat$predict_obj_row$fit)[,1],
     data.frame(E_T=cerardat$predict_obj_row$se.fit)
@@ -685,6 +689,7 @@ extract_results = function(cerardat,
     ylim=c(0,max(tmp_))
   }
 
+
   for(i in 1:nrow(cerardat$cont_gt) )
   {
     date_accumulation = nor1mix::norMix(mu=GT_date_sd[,1],w=unlist(as.vector(cerardat$cont_gt[i,])),sigma=GT_date_sd[,2])
@@ -703,16 +708,24 @@ extract_results = function(cerardat,
     date_accumulation_density$y[length(date_accumulation_density$y)] = 0
     date_evenement_density$y[length(date_accumulation_density$y)] = 0
 
-    grDevices::tiff(file=path.expand(paste(path,"/",
-                    dimnames(cerardat$cont_gt)[[1]][i],".jpeg",sep="")),
-                    width = width, height = height,units = "px", pointsize = 12)
-
-
-    plot(date_accumulation_density,xlim=xlim, ylim=ylim,xlab="Date",col="black",
+    if(i <= length(cerardat$obs_ca_eval[,1])){
+      grDevices::tiff(file=path.expand(paste(path,"/ref/",
+                                             dimnames(cerardat$cont_gt)[[1]][i],".jpeg",sep="")),
+                      width = width, height = height,units = "px", pointsize = 12)
+      plot(date_accumulation_density,xlim=xlim, ylim=ylim,xlab="Date",col="black",
            ylab=dimnames(cerardat$cont_gt)[[1]][i],type= "l",xaxt="n",
            main="model dateEv (red) and dateAc (black)",
            sub=paste("Quality of row representation (cos2) in correspondence analysis: ",arrondi(cerardat$obs_ca_eval[i],2)))
 
+    }else{
+      grDevices::tiff(file=path.expand(paste(path,"/sup/",
+                                             dimnames(cerardat$cont_gt)[[1]][i],".jpeg",sep="")),
+                      width = width, height = height,units = "px", pointsize = 12)
+      plot(date_accumulation_density,xlim=xlim, ylim=ylim,xlab="Date",col="black",
+           ylab=dimnames(cerardat$cont_gt)[[1]][i],type= "l",xaxt="n",
+           main="model dateEv (red) and dateAc (black)")
+
+    }
 
     graphics::axis(side=1,col="black",at=pretty(seq(xlim[1],xlim[2]),AUTO_TICK))
 

@@ -1,7 +1,7 @@
 Package: SPARTAAS
 Type: Package
 Title: Statistical Pattern Recognition and daTing using Archaeological Artefacts assemblageS
-Version: 1.2.2
+Version: 1.2.3
 Authors@R: c(person("Arthur","Coulon", role = c("aut","cre"),
                      email = "arthur-coulon@outlook.fr"),
              person("Lise","Bellanger", role = "aut",
@@ -23,7 +23,7 @@ License: GPL (>= 2)
 Encoding: UTF-8    
 LazyData: true
 Depends: R (>= 4.1.0)
-Imports: FactoMineR, grDevices,dplyr,tidyr,ggplot2,plotly,stringr,colorspace,crayon,
+Imports: FactoMineR, grDevices,dplyr,tidyr,ggplot2,plotly,stringr,colorspace,
     shiny,shinydashboard,shinyjs,shinyjqui,fpc,ggdendro,htmltools,
     rstudioapi,htmlwidgets,shinythemes,explor,shinyWidgets,scatterD3,
     sp,ks,foreign,grid,cluster,leaflet,ape,mapview,
