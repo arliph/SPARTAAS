@@ -34,7 +34,6 @@ importFrom("colorspace",      "rainbow_hcl")
 importFrom("shinydashboard",  "box")
 importFrom("shinyjqui",       "jqui_resizable")
 importFrom("fpc",             "cluster.stats")
-importFrom("sp",              "CRS","coordinates<-","proj4string<-")
 importFrom("ks",              "kde","Hscv")
 importFrom("cluster",         "silhouette")
 importFrom("htmltools",       "htmlEscape")
@@ -47,7 +46,7 @@ import("shinyjs",             except=c("runExample","alert"))
 
 import('foreign','grid','shiny','leaflet','rstudioapi','ape',
        'htmlwidgets','shinythemes',"shinyWidgets","scatterD3",
-       "explor","mapview")
+       "explor")
 
 S3method("print",     "hclustcompro_cl")
 S3method("print",     "selectAlpha_obj")

@@ -359,14 +359,14 @@ server <- function(input, output, session) {
   #------------------------------------------------------#
   # Download
   #------------------------------------------------------#
-  output$map.png <- downloadHandler(
-    filename = "map.png",
-    content = function(file) {
-      showModal(waitModal())
-      mapshot(dlmap$map, file = file)
-      removeModal()
-    }
-  )
+  # output$map.png <- downloadHandler(
+  #   filename = "map.png",
+  #   content = function(file) {
+  #     showModal(waitModal())
+  #     mapshot(dlmap$map, file = file)
+  #     removeModal()
+  #   }
+  # )
 
   #------------------------------------------------------#
   #  modalDialog zdata ask
@@ -1385,7 +1385,7 @@ server <- function(input, output, session) {
           legend.position="bottom",
           plot.background = element_rect(
             colour = "#222222",
-            size = 1
+            linewidth = 1
           )
         )
         values[["avesilplot"]] <- plot
@@ -1408,7 +1408,7 @@ server <- function(input, output, session) {
           legend.position="bottom",
           plot.background = element_rect(
             colour = "#222222",
-            size = 1
+            linewidth = 1
           )
         )
         values[["WSSplot"]] <- plot

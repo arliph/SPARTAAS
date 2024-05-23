@@ -1,14 +1,13 @@
 library(shinythemes)
 library(shinyjs)
 library(leaflet)
-library(markdown)
-library(sp)           #for grid ...
+#library(markdown)
+#library(sp)           #for grid ...
 library(cluster)      #for silhouette
 library(ggplot2)
 library(ape)          #for Moran.i
 library(ks)           #for kde Hscv
 library("shinyWidgets")
-library(mapview)      #mapshot
 library(htmltools)
 
 load(file = "./data/datarcheo.RData")
@@ -130,7 +129,7 @@ ui <- fluidPage(useShinyjs(),style="padding-top: 150px;",theme = shinytheme("fla
                                                                       dropdownButton(
                                                                         downloadButton("all.pdf","Download plots as pdf"),
                                                                         hr(style="border-color: #222222;"),
-                                                                        downloadButton("map.png", "Download map as png"),
+                                                                        #downloadButton("map.png", "Download map as png"),
                                                                         icon = icon("floppy-disk", lib = "glyphicon"), width = "220px",
                                                                         size = "sm",
                                                                         tooltip = tooltipOptions(title = "Download")

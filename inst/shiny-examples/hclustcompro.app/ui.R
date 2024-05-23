@@ -207,8 +207,6 @@ ui <- fluidPage(useShinyjs(),withMathJax(),style="padding-top: 150px;",theme = s
                          sliderInput("alpha", label = "Alpha", min = 0, max = 1, step = 0.01, value = 0),
 
 
-
-
                          br(),
                          uiOutput("formula"),
                          #HTML("<p><img style=\"width:200px;\" src=\"GS/formule.png\"></p>"),

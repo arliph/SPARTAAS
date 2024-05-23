@@ -123,8 +123,8 @@ plot_EPPM <- function(x,show,permute) {
       caption = "Warnings: The frequencies are calculated independently for each element (row).
 You can see the relative number of observations in the Weight column"
     ) +
-    theme_grey(base_size = 15) + geom_segment(aes(x = 0, y = -.04, xend = 0, yend = .04),
-                                              linetype = "blank") +
+    theme_grey(base_size = 15) +
+    annotate("segment",x = 0, y = -.04, xend = 0, yend = .04,color = "white") +
     theme(legend.position = "bottom",
           panel.spacing = unit(.2, "lines"),
           strip.text.x = element_text(angle = 90),

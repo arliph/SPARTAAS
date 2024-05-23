@@ -27,7 +27,7 @@ First dissimilarity matrix (square matrix) or distance matrix. Could be a contin
 Second dissimilarity matrix (square matrix), same size as D1, or distance matrix.
 }
   \item{alpha}{
-The mixing parameter in order to generate the D_alpha matrix. Formula: D_alpha = alpha * D1 + (1-alpha) * D2
+The mixing parameter in order to generate the D_alpha matrix (in [0;1]). Formula: D_alpha = alpha * D1 + (1-alpha) * D2
 }
 
   \item{k}{

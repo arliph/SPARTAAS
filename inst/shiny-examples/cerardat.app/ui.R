@@ -12,7 +12,7 @@ library(shinythemes)
 library(shinycssloaders)
 library(plotly)
 library(scatterD3)
-library(caret)
+#library(caret)
 
 
 ui <- fluidPage(useShinyjs(),withMathJax(),style="padding-top: 150px;",theme = shinytheme("flatly"),
