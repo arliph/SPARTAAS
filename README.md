@@ -2,7 +2,7 @@
 Statistical pattern recognition and dating using archaeological artefacts assemblages
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SPARTAAS)](https://cran.r-project.org/package=SPARTAAS)
-[![Latest Stable Version](https://img.shields.io/badge/version-1.2.3-blue)]()
+[![Latest Stable Version](https://img.shields.io/badge/version-1.2.4-blue)]()
 ---
 
 [SPARTAAS](https://spartaas.gitpages.huma-num.fr/r-package/index.html) is an [R](https://www.r-project.org) package with R functions that are
